@@ -1,9 +1,10 @@
 ﻿using Chat.Application.Paging;
+using Chat.Core.Entities;
 using System.Linq.Expressions;
 
 namespace Chat.Application.IRepositories
 {
-    public interface IGenericRepository<TEntity> where TEntity : class
+    public interface IGenericRepository<TEntity> where TEntity : EntityBase
     {
         Task AddAsync(TEntity item);
 

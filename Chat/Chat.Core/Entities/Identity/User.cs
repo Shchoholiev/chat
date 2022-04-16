@@ -2,10 +2,10 @@
 
 namespace Chat.Core.Entities.Identity
 {
-    public class User
+    public class User : EntityBase
     {
         [Key]
-        public string Id { get; set; }
+        public new string Id { get; set; }
 
         public string Name { get; set; }
 

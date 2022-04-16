@@ -1,6 +1,6 @@
 ﻿using Chat.Core.Entities.Identity;
 
-namespace Chat.Application.Repository
+namespace Chat.Application.IRepositories
 {
     public interface IUserRepository
     {

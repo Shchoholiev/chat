@@ -1,7 +1,7 @@
 ﻿using Chat.Application.Paging;
 using System.Linq.Expressions;
 
-namespace Chat.Application.Repository
+namespace Chat.Application.IRepositories
 {
     public interface IGenericRepository<TEntity> where TEntity : class
     {

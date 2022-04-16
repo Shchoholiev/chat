@@ -2,7 +2,7 @@
 
 namespace Chat.Core.Entities
 {
-    public class Chat : EntityBase
+    public class Room : EntityBase
     {
         public string? Name { get; set; }
 

@@ -13,5 +13,7 @@ namespace Chat.Application.Interfaces
         Task<OperationDetails> UpdateUserAsync(User user);
 
         Task DeleteAsync(string id);
+
+        Task<User?> GetUserAsync(string email);
     }
 }

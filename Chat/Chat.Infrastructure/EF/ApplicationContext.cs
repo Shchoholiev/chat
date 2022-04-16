@@ -1,5 +1,6 @@
 ﻿using Chat.Core.Entities;
 using Chat.Core.Entities.Identity;
+using Chat.Infrastructure.FluentAPI;
 using Microsoft.EntityFrameworkCore;
 
 namespace Chat.Infrastructure.EF
@@ -24,6 +25,10 @@ namespace Chat.Infrastructure.EF
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.ApplyConfiguration(new UserEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ConnectionEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new RoomEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new MessageEntityConfiguration());
         }
 
         public DbSet<User> Users { get; set; }

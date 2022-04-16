@@ -2,7 +2,7 @@
 
 namespace Chat.Application.IRepositories
 {
-    public interface IUserRepository
+    public interface IUsersRepository
     {
         Task AddAsync(User user);
 

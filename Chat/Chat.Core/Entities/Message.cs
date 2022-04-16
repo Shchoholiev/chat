@@ -8,7 +8,7 @@ namespace Chat.Core.Entities
 
         public DateTime SendDate { get; set; }
 
-        public Chat Chat { get; set; }
+        public Room Room { get; set; }
 
         public User? Sender { get; set; }
 

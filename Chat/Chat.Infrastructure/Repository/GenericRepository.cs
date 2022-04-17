@@ -10,6 +10,7 @@ namespace Chat.Infrastructure.Repository
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : EntityBase
     {
         private readonly ApplicationContext _db;
+
         private readonly DbSet<TEntity> _table;
 
         public GenericRepository()
@@ -45,6 +46,13 @@ namespace Chat.Infrastructure.Repository
         {
             var query = this._table.AsNoTracking();
             return await this.Include(query, includeProperties).FirstOrDefaultAsync(e => e.Id == id);
+        }
+
+        public async Task<TEntity> GetOneAsync(Expression<Func<TEntity, bool>> predicate, 
+                                               params Expression<Func<TEntity, object>>[] includeProperties)
+        {
+            var query = this._table.AsNoTracking();
+            return await this.Include(query, includeProperties).FirstOrDefaultAsync(predicate);
         }
 
         public async Task<PagedList<TEntity>> GetPageAsync(PageParameters pageParameters)
@@ -102,9 +110,17 @@ namespace Chat.Infrastructure.Repository
                                             => current.Include(includeProperty));
         }
 
-        private async Task SaveAsync()
+        public async Task SaveAsync()
         {
-            await this._db.SaveChangesAsync();
+            try
+            {
+                await this._db.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
         }
     }
 }

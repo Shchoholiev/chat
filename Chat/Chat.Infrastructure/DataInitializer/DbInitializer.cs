@@ -1,4 +1,5 @@
-﻿using Chat.Core.Entities.Identity;
+﻿using Chat.Core.Entities;
+using Chat.Core.Entities.Identity;
 using Chat.Infrastructure.EF;
 using Chat.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
@@ -27,8 +28,29 @@ namespace Chat.Infrastructure.DataInitializer
                     RefreshTokenExpiryTime = DateTime.Now.AddDays(7),
                 }
             };
-
             context.Users.Add(user);
+            context.SaveChanges();
+
+            var petya = new User
+            {
+                Id = DateTime.Now.Ticks.ToString(),
+                Name = "Petya",
+                Email = "petya@petya",
+                PasswordHash = passwordHasher.Hash("petya"),
+                UserToken = new UserToken
+                {
+                    RefreshToken = tokenService.GenerateRefreshToken(),
+                    RefreshTokenExpiryTime = DateTime.Now.AddDays(7),
+                }
+            };
+            context.Users.Add(petya);
+            context.SaveChanges();
+
+            var room = new Room
+            {
+                Users = new List<User> { user, petya },
+            };
+            context.Rooms.Add(room);
             context.SaveChanges();
         }
     }

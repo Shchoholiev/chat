@@ -19,7 +19,6 @@ namespace Chat.Infrastructure
                 options.UseSqlServer(connectionString)
             );
 
-            services.AddScoped<IUsersRepository, UsersRepository>();
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             return services;

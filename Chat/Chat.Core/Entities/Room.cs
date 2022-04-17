@@ -6,7 +6,7 @@ namespace Chat.Core.Entities
     {
         public string? Name { get; set; }
 
-        public List<Message>? Messages { get; set; }
+        public List<Message>? Messages { get; set; } = new();
 
         public List<User> Users { get; set; }
     }

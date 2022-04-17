@@ -1,7 +1,10 @@
 using Chat.API;
+using Chat.API.Controllers;
+using Chat.API.SignalR;
 using Chat.Infrastructure;
 using Chat.Infrastructure.DataInitializer;
 using Chat.Infrastructure.EF;
+using Microsoft.AspNetCore.SignalR;
 using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +30,9 @@ builder.Services.AddCors(options =>
 builder.Services.AddInfrastructure();
 builder.Services.AddServices();
 
+builder.Services.AddSignalR();
+builder.Services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -49,6 +55,10 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapControllers();
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+    endpoints.MapHub<ChatHub>("/chat");
+});
 
 app.Run();

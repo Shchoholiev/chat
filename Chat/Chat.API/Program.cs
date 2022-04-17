@@ -1,12 +1,15 @@
+using Chat.API;
 using Chat.Infrastructure;
 using Chat.Infrastructure.DataInitializer;
 using Chat.Infrastructure.EF;
 using Newtonsoft.Json;
 
-var context = new ApplicationContext();
-await DbInitializer.Initialize(context);
-
 var builder = WebApplication.CreateBuilder(args);
+
+var context = new ApplicationContext();
+await DbInitializer.Initialize(context, builder.Configuration);
+
+builder.Services.AddJWTTokenServices(builder.Configuration);
 
 builder.Services.AddControllers().AddNewtonsoftJson(options =>
     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);

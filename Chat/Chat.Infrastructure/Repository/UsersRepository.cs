@@ -10,6 +10,12 @@ namespace Chat.Infrastructure.Repository
         private readonly ApplicationContext _db;
         private readonly DbSet<User> _table;
 
+        public UsersRepository()
+        {
+            this._db = new ApplicationContext();
+            this._table = _db.Set<User>();
+        }
+
         public async Task AddAsync(User user)
         {
             this._db.Attach(user);

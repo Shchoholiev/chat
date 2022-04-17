@@ -13,7 +13,7 @@ namespace Chat.Core.Entities.Identity
 
         public string PasswordHash { get; set; }
 
-        public UserToken UserToken { get; set; }
+        public UserToken? UserToken { get; set; }
 
         public List<Connection>? Connections { get; set; }
 

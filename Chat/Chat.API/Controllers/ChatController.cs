@@ -30,6 +30,7 @@ namespace Chat.API.Controllers
         }
 
         [HttpPost]
+        [Route("to-user")]
         public async Task<IActionResult> SendMessageToUser([FromBody] MessageDTO messageDTO)
         {
             var email = User?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
@@ -44,7 +45,7 @@ namespace Chat.API.Controllers
 
             foreach (var connection in user.Connections.Where(c => c.IsConnected == true))
             {
-                await this._hubContext.Clients.User(recipient.Id).SendAsync("SendMessageToUser", messageDTO.Text);
+                await this._hubContext.Clients.User(recipient.Email).SendAsync("MessageSentToUser", messageDTO);
             }
             var message = new Message { Text = messageDTO.Text, SendDate = DateTime.Now, Sender = user, Room = room };
             this._roomsRepository.Attach(message);

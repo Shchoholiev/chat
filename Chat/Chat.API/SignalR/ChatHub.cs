@@ -23,15 +23,17 @@ namespace Chat.API.SignalR
         public override async Task<Task> OnConnectedAsync()
         {
             var email = Context.User?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var user = await this._usersRepository.GetOneAsync(u => u.Email == email, u => u.Connections);
+            var user = await this._usersRepository.GetOneAsync(u => u.Email == email);
             if (user != null)
             {
-                user.Connections.Add(new Connection
+                var connection = new Connection
                 {
                     Id = Context.ConnectionId,
                     IsConnected = true,
-                });
-                await this._usersRepository.UpdateAsync(user);
+                    User = user,
+                };
+                this._connectionsRepository.Attach(connection);
+                await this._connectionsRepository.AddAsync(connection);
             }
 
             return base.OnConnectedAsync();

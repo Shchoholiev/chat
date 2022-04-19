@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Chat.Application.DTO;
+using Chat.Core.Entities;
 using Chat.Core.Entities.Identity;
 
 namespace Chat.API.Mapping
@@ -10,11 +11,18 @@ namespace Chat.API.Mapping
         {
             cfg.CreateMap<UserDTO, User>();
 
+            cfg.CreateMap<RoomDTO, Room>();
+
         }).CreateMapper();
 
         public User Map(User user, UserDTO userDTO)
         {
             return this._mapper.Map(userDTO, user);
+        }
+
+        public Room Map(RoomDTO roomDTO)
+        {
+            return this._mapper.Map<Room>(roomDTO);
         }
     }
 }

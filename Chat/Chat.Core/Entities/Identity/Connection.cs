@@ -7,8 +7,6 @@ namespace Chat.Core.Entities.Identity
         [Key]
         public new string Id { get; set; }
 
-        public bool IsConnected { get; set; }
-
         public User User { get; set; }
     }
 }

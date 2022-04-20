@@ -1,4 +1,4 @@
-﻿namespace Chat.API.Controllers
+﻿namespace Chat.API.Models
 {
     public class LoginViewModel
     {

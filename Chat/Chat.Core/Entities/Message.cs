@@ -13,5 +13,7 @@ namespace Chat.Core.Entities
         public User? Sender { get; set; }
 
         public bool HideForSender { get; set; }
+
+        public Message? RepliedTo { get; set; }
     }
 }

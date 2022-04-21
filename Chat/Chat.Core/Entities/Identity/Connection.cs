@@ -1,8 +1,11 @@
-﻿namespace Chat.Core.Entities.Identity
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Chat.Core.Entities.Identity
 {
     public class Connection : EntityBase
     {
-        public bool IsConnected { get; set; }
+        [Key]
+        public new string Id { get; set; }
 
         public User User { get; set; }
     }

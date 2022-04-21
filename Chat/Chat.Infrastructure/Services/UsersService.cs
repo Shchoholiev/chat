@@ -8,11 +8,11 @@ namespace Chat.Infrastructure.Services
 {
     public class UsersService : IUsersService
     {
-        private readonly IUsersRepository _usersRepository;
+        private readonly IGenericRepository<User> _usersRepository;
 
         private readonly IPasswordHasher _passwordHasher;
 
-        public UsersService(IUsersRepository userRepository, IPasswordHasher passwordHasher)
+        public UsersService(IGenericRepository<User> userRepository, IPasswordHasher passwordHasher)
         {
             this._usersRepository = userRepository;
             this._passwordHasher = passwordHasher;
@@ -21,7 +21,7 @@ namespace Chat.Infrastructure.Services
         public async Task<OperationDetails> RegisterAsync(UserDTO userDTO)
         {
             var operationDetails = new OperationDetails();
-            if (await this._usersRepository.GetUserAsync(userDTO.Email) != null)
+            if (await this._usersRepository.GetOneAsync(u => u.Email == userDTO.Email) != null)
             {
                 operationDetails.AddError("This email is already used!");
                 return operationDetails;
@@ -49,7 +49,7 @@ namespace Chat.Infrastructure.Services
 
         public async Task<OperationDetails> LoginAsync(UserDTO userDTO)
         {
-            var user = await this._usersRepository.GetUserAsync(userDTO.Email);
+            var user = await this._usersRepository.GetOneAsync(u => u.Email == userDTO.Email);
 
             var operationDetails = new OperationDetails();
             if (user == null)
@@ -68,19 +68,21 @@ namespace Chat.Infrastructure.Services
 
         public async Task<OperationDetails> UpdateUserAsync(User user)
         {
+            this._usersRepository.Attach(user);
             await this._usersRepository.UpdateAsync(user);
             return new OperationDetails();
         }
 
         public async Task DeleteAsync(string email)
         {
-            var user = await this._usersRepository.GetUserAsync(email);
+            var user = await this._usersRepository.GetOneAsync(u => u.Email == email);
             await this._usersRepository.DeleteAsync(user);
         }
 
         public async Task<User?> GetUserAsync(string email)
         {
-            return await this._usersRepository.GetUserAsync(email);
+            return await this._usersRepository.GetOneAsync(u => u.Email == email, u => u.UserToken, 
+                                                           u => u.Connections, u => u.Rooms);
         }
     }
 }

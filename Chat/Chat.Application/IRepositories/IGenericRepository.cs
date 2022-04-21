@@ -18,6 +18,9 @@ namespace Chat.Application.IRepositories
 
         Task<TEntity> GetOneAsync(int id, params Expression<Func<TEntity, object>>[] includeProperties);
 
+        Task<TEntity> GetOneAsync(Expression<Func<TEntity, bool>> predicate,
+                                  params Expression<Func<TEntity, object>>[] includeProperties);
+
         Task<PagedList<TEntity>> GetPageAsync(PageParameters pageParameters);
 
         Task<PagedList<TEntity>> GetPageAsync(PageParameters pageParameters,
@@ -26,5 +29,7 @@ namespace Chat.Application.IRepositories
         Task<PagedList<TEntity>> GetPageAsync(PageParameters pageParameters, 
                                               Expression<Func<TEntity, bool>> predicate,
                                               params Expression<Func<TEntity, object>>[] includeProperties);
+
+        Task SaveAsync();
     }
 }

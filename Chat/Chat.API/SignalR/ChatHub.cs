@@ -21,9 +21,9 @@ namespace Chat.API.SignalR
             this._connectionsRepository = connectionsRepository;
         }
 
-        public async Task ChooseChat(int roomId)
+        public async Task ChooseChat(string roomId)
         {
-            await this.Groups.AddToGroupAsync(this.Context.ConnectionId, roomId.ToString());
+            await this.Groups.AddToGroupAsync(this.Context.ConnectionId, roomId);
         }
 
         public override async Task<Task> OnConnectedAsync()
@@ -40,11 +40,6 @@ namespace Chat.API.SignalR
                 this._connectionsRepository.Attach(connection);
                 await this._connectionsRepository.AddAsync(connection);
             }
-
-            //foreach (var room in user.Rooms.Where(r => r.DisplayName != null))
-            //{
-            //    await Groups.AddToGroupAsync(Context.ConnectionId, room.Id.ToString());
-            //}
 
             return base.OnConnectedAsync();
         }

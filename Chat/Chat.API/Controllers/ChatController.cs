@@ -1,4 +1,5 @@
-﻿using Chat.API.Models;
+﻿using Chat.API.Mapping;
+using Chat.API.Models;
 using Chat.API.SignalR;
 using Chat.Application.DTO;
 using Chat.Application.IRepositories;
@@ -25,6 +26,8 @@ namespace Chat.API.Controllers
         private readonly IGenericRepository<Room> _roomsRepository;
 
         private readonly IMessagesRepository _messagesReposiory;
+
+        private readonly Mapper _mapper = new();
 
         public ChatController(IHubContext<ChatHub> hubContext, IGenericRepository<User> usersRepository,
                               IGenericRepository<Room> roomsRepository, IMessagesRepository messagesReposiory)
@@ -71,9 +74,11 @@ namespace Chat.API.Controllers
             }
 
             var message = new Message { Text = messageDTO.Text, SendDate = DateTime.Now, Sender = user, Room = room };
-            await this._hubContext.Clients.Group(room.Id.ToString()).SendAsync("MessageSent", message);
             this._roomsRepository.Attach(message);
             await this._roomsRepository.SaveAsync();
+
+            var signalrMessage = this._mapper.Map(message);
+            await this._hubContext.Clients.Group(room.Id.ToString()).SendAsync("MessageSent", signalrMessage);
 
             return Ok();
         }

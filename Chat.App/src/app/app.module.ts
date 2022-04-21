@@ -10,8 +10,12 @@ import { JwtModule } from '@auth0/angular-jwt';
 import { LoginComponent } from './account/login/login.component';
 import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './auth-interceptor';
-import { ChatComponent } from './chats/chats/chat/chat.component';
-import { ChatsComponent } from './chats/chats/chats.component';
+import { RoomsComponent } from './rooms/rooms/rooms.component';
+import { RoomComponent } from './rooms/rooms/room/room.component';
+import { ReceivedMessageComponent } from './rooms/rooms/room/received-message/received-message.component';
+import { SendMessageComponent } from './rooms/rooms/room/send-message/send-message.component';
+import { SentMessageComponent } from './rooms/rooms/room/sent-message/sent-message.component';
+import { ServerMessageComponent } from './rooms/rooms/room/server-message/server-message.component';
 
 export function tokenGetter() {
   return localStorage.getItem("jwt");
@@ -23,8 +27,12 @@ export function tokenGetter() {
     NavigationBarComponent,
     RegisterComponent,
     LoginComponent,
-    ChatComponent,
-    ChatsComponent
+    RoomsComponent,
+    RoomComponent,
+    ReceivedMessageComponent,
+    SendMessageComponent,
+    SentMessageComponent,
+    ServerMessageComponent
   ],
   imports: [
     BrowserModule,

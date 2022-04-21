@@ -1,0 +1,14 @@
+<div class="row" style="margin-right: 0;">
+    <section class="col-3" style="padding-right: 0;">
+        <div class="messages-box">
+            <div class="list-group list-group-flush">
+                <a *ngFor="let r of rooms" [routerLink]="[ r.id ]" [ngClass]="{'active' : chosenRoomId == r.id }"
+                    class="list-group-item list-group-item-action">{{r.displayName ?? 'UserName'}}</a>
+            </div>
+        </div>
+    </section>
+    <section class="col d-flex flex-column justify-content-between" style="padding-right: 0; padding-left: 0;">
+        <router-outlet></router-outlet>
+        <app-send-message></app-send-message>
+    </section>
+</div>

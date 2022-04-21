@@ -1,0 +1,7 @@
+<div class="px-4 pt-4 pb-2 chat-box bg-white d-flex flex-column-reverse">
+  <div *ngFor="let m of signalrService.messages" [ngSwitch]="m?.sender?.name">
+    <app-server-message *ngSwitchCase="null" [message]="m"></app-server-message>
+    <app-sent-message *ngSwitchCase="authService.name" [message]="m"></app-sent-message>
+    <app-received-message *ngSwitchDefault [message]="m"></app-received-message>
+  </div>
+</div>

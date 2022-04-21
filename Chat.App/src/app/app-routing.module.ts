@@ -3,12 +3,17 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './account/login/login.component';
 import { RegisterComponent } from './account/register/register.component';
-import { ChatComponent } from './chats/chats/chat/chat.component';
+import { RoomComponent } from './rooms/rooms/room/room.component';
+import { RoomsComponent } from './rooms/rooms/rooms.component';
 
 const routes: Routes = [
   { path: 'account/register', component: RegisterComponent },
   { path: 'account/login', component: LoginComponent },
-  { path: 'chat', component: ChatComponent },
+  { 
+    path: 'rooms', 
+    component: RoomsComponent,
+    children: [{ path: ':id', component: RoomComponent}] },
+  // { path: ':id', component: RoomComponent, outlet: 'rooms' },
 ];
 
 @NgModule({

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { MessageDTO } from './shared/message-dto.model';
 import { HttpClient } from '@angular/common/http';
+import { Message } from './shared/message.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,43 +11,41 @@ export class SignalrService {
 
   private _hubConnection: HubConnection
 
-  public messages: MessageDTO[] = [];
+  private readonly _hubURL = 'https://localhost:7083/chat';
 
-  private connectionUrl = 'https://localhost:7083/chat';
+  private readonly _apiURL = 'https://localhost:7083/api/chat';
 
-  private readonly apiUrl = 'https://localhost:7083/api/chat';
+  public messages: Message[] = [];
 
   constructor(private _http: HttpClient) { }
 
-  public connect = () => {
-    this.startConnection();
+  public async chooseChat(roomId: number){
+    await this._hubConnection.invoke("ChooseChat", roomId);
+  }
+
+  public sendMessage(message: MessageDTO) {
+    this._http.post(this._apiURL + '/send', message).subscribe(res => console.log("message sent"))
+  }
+  
+  public async connect() {
+    await this.startConnection();
     this.addListeners();
   }
 
-  public sendMessageToUser(message: MessageDTO) {
-    this._http.post(this.apiUrl + '/to-user', message).subscribe(res => alert("Message sent!"))
-  }
-
   private addListeners() {
-    this._hubConnection.on("MessageSentToUser", (data: MessageDTO) => {
-      alert(data.text);
-      this.messages.push(data);
+    this._hubConnection.on("MessageSent", (data: Message) => {
+      this.messages.unshift(data);
     });
   }
 
-  private startConnection() {
+  private async startConnection() {
     this._hubConnection = this.getConnection();
-
-    this._hubConnection.start()
-      .then(() => console.log('connection started'))
-      .catch((err) => console.log('error while establishing signalr connection: ' + err))
+    await this._hubConnection.start();
   }
 
-  private getConnection(): HubConnection {
+  private getConnection() {
     return new HubConnectionBuilder()
-      .withUrl(this.connectionUrl + `?access-token=${localStorage.getItem('jwt')}`)
-      // .withHubProtocol(new MessagePackHubProtocol())
-      //  .configureLogging(LogLevel.Trace)
+      .withUrl(this._hubURL + `?access-token=${localStorage.getItem('jwt')}`)
       .build();
   }
 }

@@ -1,0 +1,11 @@
+<form class="bg-light" (ngSubmit)="onSubmit()" #form="ngForm">
+    <div class="input-group">
+      <input type="text" [(ngModel)]="message.text" placeholder="Type a message" name="text"
+             class="form-control rounded-0 border-0 py-4 bg-light" required>
+      <div class="input-group-append">
+        <button type="submit" class="btn btn-link mt-3 mx-3" [disabled]="form.invalid">
+          <i class="fa-xl fa-solid fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+</form>

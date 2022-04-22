@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Tokens } from './tokens.model';
 
 @Injectable({
   providedIn: 'root'
@@ -22,11 +23,13 @@ export class AuthService {
     return token && !this._jwtHelper.isTokenExpired(token);
   }
 
-  login(token: string){
-    localStorage.setItem('jwt', token);
+  login(token: Tokens){
+    localStorage.setItem('jwt', token.accessToken);
+    localStorage.setItem('refreshToken', token.refreshToken);
   }
 
   logout(){
     localStorage.removeItem('jwt');
+    localStorage.removeItem('refreshToken');
   }
 }

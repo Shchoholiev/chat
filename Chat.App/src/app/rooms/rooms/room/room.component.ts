@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthService } from 'src/app/auth/auth.service';
-import { Message } from 'src/app/shared/message.model';
-import { Room } from 'src/app/shared/room.model';
-import { SignalrService } from 'src/app/signalr.service';
+import { AuthService } from '../../../auth/auth.service';
+import { Message } from '../../../shared/message.model';
+import { Room } from '../../../shared/room.model';
+import { SignalrService } from '../../../signalr.service';
 import { MessagesService } from '../../messages.service';
 import { RoomsService } from '../../rooms.service';
 

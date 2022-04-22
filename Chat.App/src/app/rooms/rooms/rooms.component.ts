@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Room } from 'src/app/shared/room.model';
+import { ActivatedRoute } from '@angular/router';
+import { Room } from '../../shared/room.model';
 import { RoomsService } from '../rooms.service';
 
 @Component({

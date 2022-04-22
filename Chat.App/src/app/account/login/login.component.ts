@@ -19,11 +19,10 @@ export class LoginComponent implements OnInit {
 
   onSubmit(){
     this._accountService.login(this.user);
-    this._router.navigate([this.returnUrl]);
   }
 
   ngOnInit(): void {
-    this.returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/';
+    this.user.returnUrl = this._route.snapshot.queryParams['returnUrl'] || '/';
   }
 
 }

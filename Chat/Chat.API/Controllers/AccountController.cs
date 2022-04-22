@@ -112,9 +112,9 @@ namespace Chat.API.Controllers
             };
             await this._usersService.UpdateUserAsync(user);
 
-            return new
+            return new TokensModel
             {
-                Token = accessToken,
+                AccessToken = accessToken,
                 RefreshToken = refreshToken
             };
         }

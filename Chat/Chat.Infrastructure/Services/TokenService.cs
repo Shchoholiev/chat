@@ -60,7 +60,7 @@ namespace Chat.Infrastructure.Services
             var tokenOptions = new JwtSecurityToken(
                 issuer: _configuration.GetValue<string>("JsonWebTokenKeys:ValidIssuer"),
                 audience: _configuration.GetValue<string>("JsonWebTokenKeys:ValidAudience"),
-                expires: DateTime.Now.AddMinutes(5),
+                expires: DateTime.Now.AddMinutes(1),
                 claims: claims,
                 signingCredentials: signinCredentials
             );

@@ -1,37 +1,36 @@
 ﻿using Chat.API.Models;
 using Chat.Application.Interfaces;
+using Chat.Application.IRepositories;
+using Chat.Core.Entities.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace Chat.API.Controllers
 {
+    [ApiController]
+    [Route("api/token")]
     public class TokenController : Controller
     {
         private readonly ITokenService _tokenService;
 
-        private readonly IUsersService _usersService;
+        private readonly IGenericRepository<User> _usersRepository;
 
-        public TokenController(ITokenService tokenService, IUsersService usersService)
+        public TokenController(ITokenService tokenService, IGenericRepository<User> usersRepository)
         {
             this._tokenService = tokenService;
-            this._usersService = usersService;
+            this._usersRepository = usersRepository;
         }
 
         [HttpPost("refresh")]
         public async Task<IActionResult> Refresh([FromBody] TokensModel tokensModel)
         {
-            if (tokensModel == null)
-            {
-                return BadRequest();
-            }
-
             var principal = _tokenService.GetPrincipalFromExpiredToken(tokensModel.AccessToken);
             var email = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
 
-            var user = await _usersService.GetUserAsync(email);
-            if (user == null || user.UserToken.RefreshToken != tokensModel.RefreshToken
-                             || user.UserToken.RefreshTokenExpiryTime <= DateTime.Now)
+            var user = await _usersRepository.GetOneAsync(u => u.Email == email, u => u.UserToken);
+            if (user == null || user?.UserToken?.RefreshToken != tokensModel.RefreshToken
+                             || user?.UserToken?.RefreshTokenExpiryTime <= DateTime.Now)
             {
                 return BadRequest();
             }
@@ -39,11 +38,11 @@ namespace Chat.API.Controllers
             var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims);
             var newRefreshToken = _tokenService.GenerateRefreshToken();
             user.UserToken.RefreshToken = newRefreshToken;
-            await this._usersService.UpdateUserAsync(user);
+            await this._usersRepository.UpdateAsync(user);
 
-            return Ok(new
+            return Ok(new TokensModel
             {
-                Token = newAccessToken,
+                AccessToken = newAccessToken,
                 RefreshToken = newRefreshToken
             });
         }
@@ -53,13 +52,13 @@ namespace Chat.API.Controllers
         public async Task<IActionResult> Revoke()
         {
             var email = User?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var user = await this._usersService.GetUserAsync(email);
+            var user = await this._usersRepository.GetOneAsync(u => u.Email == email);
             if (user == null)
             {
                 return BadRequest();
             }
             user.UserToken = null;
-            await this._usersService.UpdateUserAsync(user);
+            await this._usersRepository.UpdateAsync(user);
 
             return NoContent();
         }

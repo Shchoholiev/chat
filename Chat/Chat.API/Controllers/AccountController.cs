@@ -42,7 +42,6 @@ namespace Chat.API.Controllers
             }
 
             this._mapper.Map(user, userDTO);
-            await this._usersService.UpdateUserAsync(user);
             var tokens = await UpdateUserTokens(user);
             return Ok(tokens);
         }
@@ -106,11 +105,19 @@ namespace Chat.API.Controllers
             var accessToken = this._tokenService.GenerateAccessToken(claims);
             var refreshToken = this._tokenService.GenerateRefreshToken();
 
-            user.UserToken = new UserToken
+            if (user?.UserToken == null)
             {
-                RefreshToken = refreshToken,
-                RefreshTokenExpiryTime = DateTime.Now.AddDays(7),
-            };
+                user.UserToken = new UserToken
+                {
+                    RefreshToken = refreshToken,
+                    RefreshTokenExpiryTime = DateTime.Now.AddDays(7),
+                };
+            }
+            else
+            {
+                user.UserToken.RefreshToken = refreshToken;
+                user.UserToken.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
+            }
             await this._usersService.SaveAsync();
 
             return new TokensModel

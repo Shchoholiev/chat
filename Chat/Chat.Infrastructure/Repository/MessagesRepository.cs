@@ -1,6 +1,7 @@
 ﻿using Chat.Application.IRepositories;
 using Chat.Application.Paging;
 using Chat.Core.Entities;
+using Chat.Core.Entities.Identity;
 using Chat.Infrastructure.EF;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,8 +21,17 @@ namespace Chat.Infrastructure.Repository
 
         public async Task AddAsync(Message message)
         {
-            await this._table.AddAsync(message);
-            await this.SaveAsync();
+            try
+            {
+                this._db.Attach(message);
+                await this._table.AddAsync(message);
+                await this.SaveAsync();
+            }
+            catch (Exception e)
+            {
+
+                throw;
+            }
         }
 
         public async Task UpdateAsync(Message message)

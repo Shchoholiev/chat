@@ -65,17 +65,16 @@ namespace Chat.API.Controllers
         public async Task<IActionResult> SendMessage([FromBody] MessageDTO messageDTO)
         {
             var email = this.User?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var user = await this._usersRepository.GetOneAsync(u => u.Email == email, u => u.Connections);
-            var room = await this._roomsRepository.GetOneAsync(messageDTO.RoomId, r => r.Users);
+            var user = await this._usersRepository.GetOneAsync(u => u.Email == email);
+            var room = await this._roomsRepository.GetOneAsync(messageDTO.RoomId);
 
-            if (user == null || room == null || !room.Users.Any(u => u.Email == email))
+            if (user == null || room == null)
             {
                 return BadRequest();
             }
 
             var message = new Message { Text = messageDTO.Text, SendDate = DateTime.Now, Sender = user, Room = room };
-            this._roomsRepository.Attach(message);
-            await this._roomsRepository.SaveAsync();
+            await this._messagesReposiory.AddAsync(message);
 
             var signalrMessage = this._mapper.Map(message);
             await this._hubContext.Clients.Group(room.Id.ToString()).SendAsync("MessageSent", signalrMessage);

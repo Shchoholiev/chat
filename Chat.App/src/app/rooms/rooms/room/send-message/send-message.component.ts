@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { MessageDTO } from 'src/app/shared/message-dto.model';
 import { SignalrService } from 'src/app/signalr.service';
 
@@ -12,12 +12,15 @@ export class SendMessageComponent implements OnInit {
 
   public message: MessageDTO = new MessageDTO;
 
-  constructor(private _signalRService: SignalrService, private _route: ActivatedRoute) { }
+  constructor(private _signalRService: SignalrService, private _router: Router) { }
 
   ngOnInit(): void {
-    this._route.firstChild?.paramMap.subscribe(() => {
-      this.message.roomId = this._route.snapshot.firstChild?.params['id'];
-     });
+    this.message.roomId = +this._router.url.split('/')[2];
+    this._router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.message.roomId = +this._router.url.split('/')[2];
+      }
+    });
   }
 
   onSubmit(){

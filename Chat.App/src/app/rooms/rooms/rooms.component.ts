@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Room } from 'src/app/shared/room.model';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { Room } from '../../shared/room.model';
 import { RoomsService } from '../rooms.service';
+import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-rooms',
@@ -18,13 +19,16 @@ export class RoomsComponent implements OnInit {
 
   public pageSize = 10;
 
-  constructor(private _roomsService: RoomsService, private _route: ActivatedRoute) { }
+  constructor(private _roomsService: RoomsService, 
+              private _router: Router) { }
 
   ngOnInit(): void {
     this.getPage(1);
-    this._route.firstChild?.paramMap.subscribe(() => {
-      this.chosenRoomId = this._route.snapshot.firstChild?.params['id'];
-     });
+    this._router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.chosenRoomId = +this._router.url.split('/')[2];
+      }
+    });
   }
 
   getPage(pageNumber: number){

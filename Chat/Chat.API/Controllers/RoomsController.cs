@@ -6,6 +6,7 @@ using Chat.Core.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Security.Claims;
 
 namespace Chat.API.Controllers
 {
@@ -32,7 +33,9 @@ namespace Chat.API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Room>>> GetRooms([FromQuery] PageParameters pageParameters)
         {
-            var rooms = await this._roomsRepository.GetPageAsync(pageParameters);
+            var email = User?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            var rooms = await this._roomsRepository.GetPageAsync(pageParameters, 
+                                                                 r => r.Users.Any(u => u.Email == email));
             var metadata = new
             {
                 rooms.TotalItems,

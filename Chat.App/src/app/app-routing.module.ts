@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LoginComponent } from './account/login/login.component';
 import { RegisterComponent } from './account/register/register.component';
+import { AuthGuard } from './auth/auth.guard';
 import { RoomComponent } from './rooms/rooms/room/room.component';
 import { RoomsComponent } from './rooms/rooms/rooms.component';
 
@@ -12,8 +13,9 @@ const routes: Routes = [
   { 
     path: 'rooms', 
     component: RoomsComponent,
-    children: [{ path: ':id', component: RoomComponent}] },
-  // { path: ':id', component: RoomComponent, outlet: 'rooms' },
+    children: [{ path: ':id', component: RoomComponent, canActivate: [AuthGuard] }],
+    canActivate: [AuthGuard] 
+  },
 ];
 
 @NgModule({

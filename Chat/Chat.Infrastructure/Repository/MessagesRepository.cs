@@ -21,17 +21,9 @@ namespace Chat.Infrastructure.Repository
 
         public async Task AddAsync(Message message)
         {
-            try
-            {
-                this._db.Attach(message);
-                await this._table.AddAsync(message);
-                await this.SaveAsync();
-            }
-            catch (Exception e)
-            {
-
-                throw;
-            }
+            this._db.Attach(message);
+            await this._table.AddAsync(message);
+            await this.SaveAsync();
         }
 
         public async Task UpdateAsync(Message message)
@@ -49,7 +41,11 @@ namespace Chat.Infrastructure.Repository
 
         public async Task<Message?> GetOneAsync(int id)
         {
-            return await this._table.Include(m => m.Sender).FirstOrDefaultAsync(m => m.Id == id);
+            return await this._table
+                             .Include(m => m.Sender)
+                             .Include(m => m.RepliedTo)
+                             .Include(m => m.Room)
+                             .FirstOrDefaultAsync(m => m.Id == id);
         }
 
         public async Task<PagedList<Message>> GetPageAsync(PageParameters pageParameters, int roomId, string email)

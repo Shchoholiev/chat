@@ -36,18 +36,17 @@ namespace Chat.Infrastructure.Services
         {
             var tokenValidationParameters = new TokenValidationParameters
             {
-                ValidateAudience = false, //you might want to validate the audience and issuer depending on your use case
+                ValidateAudience = false,
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
-                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("HHUHU92479-JKKNS23O")),
-                ValidateLifetime = false //here we are saying that we don't care about the token's expiration date
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(
+                    _configuration.GetValue<string>("JsonWebTokenKeys:IssuerSigningKey"))),
+                ValidateLifetime = false
             };
+
             var tokenHandler = new JwtSecurityTokenHandler();
-            SecurityToken securityToken;
-            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out securityToken);
-            var jwtSecurityToken = securityToken as JwtSecurityToken;
-            if (jwtSecurityToken == null || !jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
-                throw new SecurityTokenException("Invalid token");
+            var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
+            
             return principal;
         }
 
@@ -60,7 +59,7 @@ namespace Chat.Infrastructure.Services
             var tokenOptions = new JwtSecurityToken(
                 issuer: _configuration.GetValue<string>("JsonWebTokenKeys:ValidIssuer"),
                 audience: _configuration.GetValue<string>("JsonWebTokenKeys:ValidAudience"),
-                expires: DateTime.Now.AddMinutes(1),
+                expires: DateTime.Now.AddMinutes(5),
                 claims: claims,
                 signingCredentials: signinCredentials
             );

@@ -84,5 +84,10 @@ namespace Chat.Infrastructure.Services
             return await this._usersRepository.GetOneAsync(u => u.Email == email, u => u.UserToken, 
                                                            u => u.Connections, u => u.Rooms);
         }
+
+        public async Task SaveAsync()
+        {
+            await this._usersRepository.SaveAsync();
+        }
     }
 }

@@ -34,7 +34,6 @@ export class AuthGuard implements CanActivate {
     var tokens = new Tokens(accessToken, refreshToken);
     return this._http.post("https://localhost:7083/api/token/refresh", tokens, { observe: 'response' }).pipe(
       map((response) => {
-        alert('good')
         this._authService.login((<any>response).body);
         return true;
       }),

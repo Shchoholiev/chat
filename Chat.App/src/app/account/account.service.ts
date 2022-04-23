@@ -18,6 +18,7 @@ export class AccountService {
     this._http.post<any>(this.baseURL + '/register', form).subscribe(
       response => {
         this._authService.login(response);
+        this._router.navigate(['rooms']);
       }
     );
   }

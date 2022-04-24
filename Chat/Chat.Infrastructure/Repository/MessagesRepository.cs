@@ -1,7 +1,6 @@
 ﻿using Chat.Application.IRepositories;
 using Chat.Application.Paging;
 using Chat.Core.Entities;
-using Chat.Core.Entities.Identity;
 using Chat.Infrastructure.EF;
 using Microsoft.EntityFrameworkCore;
 
@@ -39,7 +38,13 @@ namespace Chat.Infrastructure.Repository
             await this.SaveAsync();
         }
 
-        public async Task<Message?> GetOneAsync(int id)
+        public async Task<Message?> GetMessageAsync(int id)
+        {
+            return await this._table.FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+
+        public async Task<Message?> GetFullMessageAsync(int id)
         {
             return await this._table
                              .Include(m => m.Sender)
@@ -55,6 +60,7 @@ namespace Chat.Infrastructure.Repository
                                      .Where(m => m.Room.Id == roomId && ((m.Sender.Email == email && m.HideForSender) ? false : true))
                                      .OrderByDescending(m => m.SendDate)
                                      .Include(m => m.Sender)
+                                     .Include(m => m.RepliedTo)
                                      .Skip((pageParameters.PageNumber - 1) * pageParameters.PageSize)
                                      .Take(pageParameters.PageSize)
                                      .ToListAsync();

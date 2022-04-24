@@ -5,3 +5,12 @@ input:focus, input.form-control:focus {
     -moz-box-shadow: none;
     -webkit-box-shadow: none;
 }
+
+.bg-secondary-message{
+    background-color: rgb(241, 250, 255);
+}
+
+.reply{
+    position: relative;
+    top: -55px;
+}

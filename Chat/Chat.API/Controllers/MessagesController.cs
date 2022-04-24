@@ -77,7 +77,8 @@ namespace Chat.API.Controllers
 
             if (messageDTO.RepliedTo > 0)
             {
-                message.RepliedTo = new Message { Id = messageDTO.RepliedTo };
+                var repliedTo = await this._messagesReposiory.GetMessageAsync(messageDTO.RepliedTo);
+                message.RepliedTo = repliedTo;
             }
             await this._messagesReposiory.AddAsync(message);
 
@@ -90,7 +91,7 @@ namespace Chat.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Edit(int id, [FromBody] MessageDTO messageDTO)
         {
-            var message = await this._messagesReposiory.GetOneAsync(id);
+            var message = await this._messagesReposiory.GetMessageAsync(id);
             if (message == null)
             {
                 return NotFound();
@@ -98,16 +99,17 @@ namespace Chat.API.Controllers
 
             message.Text = messageDTO.Text;
             await this._messagesReposiory.UpdateAsync(message);
+            var signalrMessage = this._mapper.Map(message);
             await this._hubContext.Clients.Group(messageDTO.RoomId.ToString())
-                                          .SendAsync("MessageEdited", messageDTO);
+                                          .SendAsync("MessageEdited", signalrMessage);
 
             return NoContent();
         }
 
         [HttpPut("hide/{id}")]
-        public async Task<IActionResult> HideForSender(int id, [FromBody] MessageDTO messageDTO)
+        public async Task<IActionResult> HideForSender(int id)
         {
-            var message = await this._messagesReposiory.GetOneAsync(id);
+            var message = await this._messagesReposiory.GetFullMessageAsync(id);
             if (message == null)
             {
                 return NotFound();
@@ -116,8 +118,8 @@ namespace Chat.API.Controllers
             message.HideForSender = true;
             await this._messagesReposiory.UpdateAsync(message);
             var signalrMessage = this._mapper.Map(message);
-            await this._hubContext.Clients.Group(messageDTO.RoomId.ToString())
-                                          .SendAsync("HideMessageForSender", signalrMessage);
+            await this._hubContext.Clients.Group(message.Room.Id.ToString())
+                                          .SendAsync("MessageHiddenForUser", signalrMessage);
 
             return NoContent();
         }
@@ -125,7 +127,7 @@ namespace Chat.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var message = await this._messagesReposiory.GetOneAsync(id);
+            var message = await this._messagesReposiory.GetFullMessageAsync(id);
             if (message == null)
             {
                 return NotFound();

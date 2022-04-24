@@ -12,7 +12,9 @@ namespace Chat.Application.IRepositories
 
         Task DeleteAsync(Message message);
 
-        Task<Message?> GetOneAsync(int id);
+        Task<Message?> GetMessageAsync(int id);
+
+        Task<Message?> GetFullMessageAsync(int id);
 
         Task<PagedList<Message>> GetPageAsync(PageParameters pageParameters, int roomId, string email);
     }

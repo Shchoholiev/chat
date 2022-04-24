@@ -5,4 +5,6 @@ export class Message {
     text: string = "";
     sendDate: Date;
     sender: User;
+    repliedTo: Message;
+    hideForSender: boolean;
 }

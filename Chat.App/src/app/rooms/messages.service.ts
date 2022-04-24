@@ -34,4 +34,8 @@ export class MessagesService {
   public delete(messageId: number){
     this._http.delete(`${this._baseURL}/${messageId}`).subscribe();
   }
+
+  public replyInPerson(recipientEmail: string, message: MessageDTO){
+    this._http.post(`${this._baseURL}/replyInPerson/${recipientEmail}`, message).subscribe()
+  }
 }

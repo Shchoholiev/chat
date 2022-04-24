@@ -138,5 +138,28 @@ namespace Chat.API.Controllers
 
             return NoContent();
         }
+
+        [HttpPost("replyInPerson/{email}")]
+        public async Task<IActionResult> ReplyInPerson(string email, [FromBody] MessageDTO messageDTO)
+        {
+            var room = await this._roomsRepository.GetOneAsync(r => r.DisplayName == null 
+                                                               && r.Users.Any(u => u.Email == email));
+            if (room == null)
+            {
+                var currentEmail = this.User?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+                var currentUser = await _usersRepository.GetOneAsync(u => u.Email == currentEmail);
+                var recipient = await _usersRepository.GetOneAsync(u => u.Email == email);
+                room = new Room
+                {
+                    DisplayName = null,
+                    Users = new List<User> { currentUser, recipient }
+                };
+                this._roomsRepository.Attach(currentUser, recipient);
+                await this._roomsRepository.AddAsync(room);
+            }
+
+            messageDTO.RoomId = room.Id;
+            return await this.Send(messageDTO);
+        }
     }
 }

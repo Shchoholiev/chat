@@ -11,6 +11,9 @@
       <div class="d-flex flex-row justify-content-between">
         <p class="small text-muted mb-0">{{getTime()}} | {{message.sender.name}}</p>
         <nav class="d-flex flex-row small text-muted mb-1">
+          <a (click)="managingMessagesService.replyInPerson(this.message)" class="link-secondary nav-link p-0"
+              style="cursor: pointer;">Reply in person</a>
+          <p class="mx-2 mb-1">|</p>
           <a (click)="managingMessagesService.reply(this.message)" class="link-secondary nav-link p-0"
               style="cursor: pointer;">Reply</a>
         </nav>

@@ -13,46 +13,76 @@ export class ManagingMessagesService {
 
   public replyMessage: Message = new Message;
 
+  public inPersonMessage: Message = new Message;
+
   public editMessage: Message = new Message;
 
   constructor(private _messagesService: MessagesService, @Inject(DOCUMENT) document: Document) { }
-  
+
+  public edit(message: Message){
+    if (this.replyMessage) {
+      this.cancelReply();
+    }
+    if (this.inPersonMessage) {
+      this.cancelReplyInPerson();
+    }
+    this.editMessage = message;
+    this.message.text = message.text;
+  }
+
+  public reply(message: Message){
+    if (this.editMessage) {
+      this.cancelEdit();
+    }
+    if (this.inPersonMessage) {
+      this.cancelReplyInPerson();
+    }
+    this.replyMessage = message;
+    this.message.repliedTo = message.id;
+  }
+
+  public replyInPerson(message: Message){
+    if (this.editMessage) {
+      this.cancelEdit();
+    }
+    if (this.replyMessage) {
+      this.cancelReply();
+    }
+    this.inPersonMessage = message;
+    this.message.repliedTo = message.id;
+  }
+
+  public send(){
+    if (this.inPersonMessage?.id) {
+      this._messagesService.replyInPerson(this.inPersonMessage.sender.email, this.message);
+      this.cancelReplyInPerson();
+    }
+    else{
+      if (!this.message.repliedTo && this.editMessage?.id) {
+        this._messagesService.edit(this.editMessage.id, this.message);
+        this.cancelEdit();
+      } else {
+        this._messagesService.send(this.message);
+        if (this.replyMessage) {
+          this.cancelReply();
+        }
+      }
+    }
+    this.message.text = "";
+  }
+
   public cancelReply(){
     this.replyMessage = new Message;
+    this.message.repliedTo = 0;
+  }
+  
+  public cancelReplyInPerson(){
+    this.inPersonMessage = new Message;
     this.message.repliedTo = 0;
   }
 
   public cancelEdit(){
     this.editMessage = new Message;
-    this.message.text = "";
-  }
-
-  public edit(message: Message){
-    this.editMessage = message;
-    this.message.text = message.text;
-    if (this.replyMessage) {
-      this.cancelReply();
-    }
-  }
-
-  public reply(message: Message){
-    this.replyMessage = message;
-    this.message.repliedTo = message.id;
-    if (this.editMessage) {
-      this.cancelEdit();
-    }
-  }
-
-  public send(){
-    if (!this.message.repliedTo && this.editMessage?.id) {
-      this._messagesService.edit(this.editMessage.id, this.message);
-      this.cancelEdit();
-    } else {
-      this._messagesService.send(this.message);
-      if (this.replyMessage) {
-        this.cancelReply();
-      }
-    }
     this.message.text = "";
   }
 

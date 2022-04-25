@@ -16,6 +16,11 @@ import { ReceivedMessageComponent } from './rooms/rooms/room/received-message/re
 import { SendMessageComponent } from './rooms/rooms/room/send-message/send-message.component';
 import { SentMessageComponent } from './rooms/rooms/room/sent-message/sent-message.component';
 import { ServerMessageComponent } from './rooms/rooms/room/server-message/server-message.component';
+import { CreateGroupComponent } from './rooms/rooms/create-group/create-group.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { UsersInGroupComponent } from './rooms/rooms/users-in-group/users-in-group.component';
 
 export function tokenGetter() {
   return localStorage.getItem("jwt");
@@ -32,13 +37,18 @@ export function tokenGetter() {
     ReceivedMessageComponent,
     SendMessageComponent,
     SentMessageComponent,
-    ServerMessageComponent
+    ServerMessageComponent,
+    CreateGroupComponent,
+    UsersInGroupComponent
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
     FormsModule,
+    MatDialogModule,
+    MatButtonModule,
+    BrowserAnimationsModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

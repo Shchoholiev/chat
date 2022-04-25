@@ -6,6 +6,6 @@ namespace Chat.Application.DTO
     {
         public string? DisplayName { get; set; }
 
-        public List<User> Users { get; set; }
+        public List<UserDTO> Users { get; set; }
     }
 }

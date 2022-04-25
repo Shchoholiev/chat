@@ -50,7 +50,8 @@ namespace Chat.API.Controllers
             foreach (var personalRoom in rooms.Where(r => r.DisplayName == null))
             {
                 var index = rooms.FindIndex(r => r.Id == personalRoom.Id);
-                rooms[index].Users = (await this._roomsRepository.GetOneAsync(personalRoom.Id, r => r.Users)).Users;
+                var room = await this._roomsRepository.GetOneAsync(personalRoom.Id, r => r.Users);
+                rooms[index].Users = room.Users.Where(u => u.Email != email).ToList();
             }
 
             var metadata = new
@@ -75,7 +76,9 @@ namespace Chat.API.Controllers
                 var room = this._mapper.Map(roomDTO);
                 var name = this.User?.Identity?.Name;
                 room.Messages.Add(new Message { Text = $"Chat created by {name}.", SendDate = DateTime.Now });
+                this._roomsRepository.Attach(room);
                 await this._roomsRepository.AddAsync(room);
+
                 return CreatedAtAction("GetRoom", new { id = room.Id }, room);
             }
 

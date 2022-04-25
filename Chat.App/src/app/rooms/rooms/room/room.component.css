@@ -19,12 +19,12 @@
   }
   
   .chat-box {
-    height: calc(100vh - 128px);
+    height: calc(100vh - 177px);
     overflow-y: scroll;
   }
 
   .chat-box-reply{
-    height: calc(100vh - 184px);
+    height: calc(100vh - 233px);
   }
   
   .rounded-lg {

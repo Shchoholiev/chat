@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MessagesService } from 'src/app/rooms/messages.service';
+import { RoomsService } from 'src/app/rooms/rooms.service';
 import { MessageDTO } from 'src/app/shared/message-dto.model';
 import { Message } from 'src/app/shared/message.model';
 

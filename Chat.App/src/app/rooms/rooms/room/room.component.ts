@@ -15,13 +15,13 @@ import { ManagingMessagesService } from './send-message/managing-messages.servic
 })
 export class RoomComponent implements OnInit {
 
-  public room: Room;
+  public room: Room = new Room;
 
   public metadata: string | null;
 
   public pageSize = 9;
 
-  constructor(private _roomsService: RoomsService, private _route: ActivatedRoute, 
+  constructor(public roomsService: RoomsService, private _route: ActivatedRoute, 
               public signalrService: SignalrService, private _messagesService: MessagesService,
               public authService: AuthService, public managingMessages: ManagingMessagesService) { }
 
@@ -32,14 +32,14 @@ export class RoomComponent implements OnInit {
       var oldRoomId = this.room?.id?.toString() || '0';
       var id = params['id'];
       await this.signalrService.chooseChat(id.toString(), oldRoomId);
-      this._roomsService.getRoom(id).subscribe(
+      this.roomsService.getRoom(id).subscribe(
         response => {
           this.room = response;
           this.signalrService.messages = [];
           this.getMessages(1);
         } 
       );
-      
+
       this.managingMessages.clearAll();
     });
   }
@@ -51,5 +51,9 @@ export class RoomComponent implements OnInit {
         this.metadata = response.headers.get('x-pagination');
       }
     )
+  }
+
+  get roomName(){
+    return this.room.users.find(u => u.email != this.authService.email)?.name;
   }
 }

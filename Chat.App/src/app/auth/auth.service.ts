@@ -19,6 +19,14 @@ export class AuthService {
     }
   }
 
+  get email(){
+    var token = localStorage.getItem("jwt");
+    if (token != null) {
+      var decodedToken = this._jwtHelper.decodeToken(token);
+      return decodedToken['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress'];
+    }
+  }
+
   get isAuthenticated(){
     var token = localStorage.getItem("jwt");
     return token && !this._jwtHelper.isTokenExpired(token);

@@ -2,8 +2,25 @@
     <section class="col-3" style="padding-right: 0;">
         <div class="messages-box">
             <div class="list-group list-group-flush">
-                <a *ngFor="let r of rooms" [routerLink]="[ r.id ]" [ngClass]="{'active' : chosenRoomId == r.id }"
-                    class="list-group-item list-group-item-action">{{r.displayName ?? 'UserName'}}</a>
+                <a *ngFor="let r of this.roomsService.rooms" [routerLink]="[ r.id ]" 
+                    [ngClass]="{'active text-white' : chosenRoomId == r.id }" 
+                    class="list-group-item list-group-item-action">
+                    <i *ngIf="!r.displayName" class="fa-sm fa-solid fa-lock"></i>
+                    <i *ngIf="r.displayName" class="fa-sm fa-solid fa-user-group"></i>
+                    {{r.displayName ?? r.users[0].name}}
+                </a>
+            </div>
+        </div>
+        <div class="d-flex flex-row bg-light" style="height: 72px;">
+            <div class="m-auto">
+                <button class="btn btn-primary mx-1" (click)="this.roomsService.openGroupDialog()">
+                    <i class="fa-sm fa-solid fa-user-group text-white"></i>
+                    New Group
+                </button>
+                <button class="btn btn-primary mx-1">
+                    <i class="fa-sm fa-solid fa-lock text-white"></i>
+                    New Dialogue
+                </button>
             </div>
         </div>
     </section>

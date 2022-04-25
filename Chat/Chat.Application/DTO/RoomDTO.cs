@@ -4,7 +4,7 @@ namespace Chat.Application.DTO
 {
     public class RoomDTO
     {
-        public string DisplayName { get; set; }
+        public string? DisplayName { get; set; }
 
         public List<User> Users { get; set; }
     }

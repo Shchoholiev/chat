@@ -1,14 +1,13 @@
 ﻿using Chat.Application.IRepositories;
 using Chat.Core.Entities.Identity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
 namespace Chat.API.SignalR
 {
     [Authorize]
-    public class ChatHub : Hub<IChatHub>
+    public class ChatHub : Hub
     {
         private readonly IGenericRepository<User> _usersRepository;
 
@@ -21,15 +20,19 @@ namespace Chat.API.SignalR
             this._connectionsRepository = connectionsRepository;
         }
 
-        public async Task ChooseChat(string roomId)
+        public async Task ChooseChat(string newRoomId, string oldRoomId)
         {
-            await this.Groups.AddToGroupAsync(this.Context.ConnectionId, roomId);
+            if (int.Parse(oldRoomId) > 0)
+            {
+                await this.Groups.RemoveFromGroupAsync(this.Context.ConnectionId, oldRoomId);
+            }
+            await this.Groups.AddToGroupAsync(this.Context.ConnectionId, newRoomId);
         }
 
         public override async Task<Task> OnConnectedAsync()
         {
             var email = this.Context.User?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var user = await this._usersRepository.GetOneAsync(u => u.Email == email, u => u.Rooms);
+            var user = await this._usersRepository.GetOneAsync(u => u.Email == email);
             if (user != null)
             {
                 var connection = new Connection

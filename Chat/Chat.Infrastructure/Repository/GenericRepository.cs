@@ -44,14 +44,14 @@ namespace Chat.Infrastructure.Repository
 
         public async Task<TEntity> GetOneAsync(int id, params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            var query = this._table.AsNoTracking();
+            var query = this._table;
             return await this.Include(query, includeProperties).FirstOrDefaultAsync(e => e.Id == id);
         }
 
         public async Task<TEntity> GetOneAsync(Expression<Func<TEntity, bool>> predicate, 
                                                params Expression<Func<TEntity, object>>[] includeProperties)
         {
-            var query = this._table.AsNoTracking();
+            var query = this._table;
             return await this.Include(query, includeProperties).FirstOrDefaultAsync(predicate);
         }
 

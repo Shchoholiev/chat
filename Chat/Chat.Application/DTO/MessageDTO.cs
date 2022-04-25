@@ -4,6 +4,8 @@
     {
         public string Text { get; set; }
 
+        public int RepliedTo { get; set; }
+
         public int RoomId { get; set; }
     }
 }

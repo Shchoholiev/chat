@@ -1,11 +1,41 @@
-<form class="bg-light" (ngSubmit)="onSubmit()" #form="ngForm">
-    <div class="input-group">
-      <input type="text" [(ngModel)]="message.text" placeholder="Type a message" name="text"
-             class="form-control rounded-0 border-0 py-4 bg-light" required>
-      <div class="input-group-append">
-        <button type="submit" class="btn btn-link mt-3 mx-3" [disabled]="form.invalid">
-          <i class="fa-xl fa-solid fa-paper-plane"></i>
-        </button>
-      </div>
+<section>
+  <div class="bg-secondary-message p-3 d-flex justify-content-between" *ngIf="this.managingMessages.replyMessage?.id">
+    <div class="d-flex ">
+      <i class="fa-solid fa-reply text-primary mt-1"></i>
+      <p class="mb-0 mx-2 text-muted reply-length">
+        {{this.managingMessages.replyMessage.text}}
+      </p>
     </div>
-</form>
+    <button class="btn btn-link p-0" style="height: 20px;" (click)="this.managingMessages.cancelReply()">
+      <i class="fa-solid fa-xmark text-danger m-0 fa-lg"></i>
+    </button>
+  </div>
+
+  <div class="bg-secondary-message p-3 d-flex justify-content-between" *ngIf="this.managingMessages.inPersonMessage?.id">
+    <div class="d-flex ">
+      <i class="fa-solid fa-lock text-primary mt-1"></i>
+      <p class="mb-0 mx-2 text-muted reply-length">
+        {{this.managingMessages.inPersonMessage.text}}
+      </p>
+    </div>
+    <button class="btn btn-link p-0" style="height: 20px;" (click)="this.managingMessages.cancelReplyInPerson()">
+      <i class="fa-solid fa-xmark text-danger m-0 fa-lg"></i>
+    </button>
+  </div>
+
+  <form class="bg-light" (ngSubmit)="this.managingMessages.send()" #form="ngForm">
+      <div class="input-group">
+        <input type="text" [(ngModel)]="this.managingMessages.message.text" placeholder="Type a message" name="text"
+              class="form-control rounded-0 border-0 py-4 bg-light" autocomplete="off" required autofocus>
+        <div class="input-group-append d-flex">
+          <button *ngIf="this.managingMessages.editMessage?.id" class="btn btn-link">
+            <i class="fa-xl fa-solid fa-xmark text-danger"></i>
+          </button>
+          <button type="submit" class="btn btn-link mx-3" [disabled]="form.invalid">
+            <i class="fa-xl fa-solid fa-paper-plane" *ngIf="!this.managingMessages.editMessage?.id "></i>
+            <i class="fa-xl fa-solid fa-pen" *ngIf="this.managingMessages.editMessage?.id"></i>
+          </button>
+        </div>
+      </div>
+  </form>
+</section>

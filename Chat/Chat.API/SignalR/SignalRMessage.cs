@@ -11,5 +11,9 @@ namespace Chat.API.SignalR
         public DateTime SendDate { get; set; }
 
         public UserDTO Sender { get; set; }
+
+        public bool HideForSender { get; set; }
+
+        public SignalRMessage RepliedTo { get; set; }
     }
 }

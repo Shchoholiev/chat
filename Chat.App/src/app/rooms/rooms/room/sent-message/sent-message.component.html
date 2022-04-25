@@ -1,10 +1,27 @@
 <div class="media w-75 ml-auto mb-1" style="margin-left: auto;margin-right:0;">
     <div class="media-body ml-3">
-      <div class="bg-primary rounded py-2 px-3 mb-1">
-        <p class="text-small mb-0 text-white">{{message.text}}</p>
+      <div id="message-{{message.id}}" class="bg-primary rounded py-2 px-3 mb-1 transition">
+        <div class="d-flex text-reply" *ngIf="this.message.repliedTo" style="cursor: pointer;"
+            (click)="managingMessagesService.toMessage(message.repliedTo.id)">
+          <i class="fa-solid fa-reply mt-1"></i>
+          <p class="mb-0 mx-2 reply-length">{{this.message.repliedTo.text}}</p>
+        </div>
+        <p class="text-small mb-0 text-white">{{this.message.text}}</p>
       </div>
       <div class="d-flex flex-row justify-content-between">
-        <p></p>
+        <nav class="d-flex flex-row small text-muted">
+          <a (click)="managingMessagesService.reply(this.message)" class="link-secondary nav-link p-0"
+              style="cursor: pointer;">Reply</a>
+          <p class="mx-2 mb-1">|</p>
+          <a (click)="managingMessagesService.edit(this.message)" class="link-secondary nav-link p-0"
+              style="cursor: pointer;">Edit</a>
+          <p class="mx-2 mb-1">|</p>
+          <a (click)="messagesService.delete(this.message.id)" class="link-secondary nav-link p-0"
+              style="cursor: pointer;">Delete</a>
+          <p class="mx-2 mb-1">|</p>
+          <a (click)="messagesService.hide(this.message.id)" class="link-secondary nav-link p-0"
+              style="cursor: pointer;">Delete For Me</a>
+        </nav>
         <p class="small text-muted mb-0">{{getTime()}}</p>
       </div>  
     </div>

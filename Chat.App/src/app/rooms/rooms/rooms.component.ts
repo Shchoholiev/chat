@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { Room } from '../../shared/room.model';
 import { RoomsService } from '../rooms.service';
-import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-rooms',
@@ -24,6 +23,7 @@ export class RoomsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getPage(1);
+    this.chosenRoomId = +this._router.url.split('/')[2];
     this._router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {
         this.chosenRoomId = +this._router.url.split('/')[2];

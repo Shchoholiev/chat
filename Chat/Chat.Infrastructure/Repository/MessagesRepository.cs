@@ -20,6 +20,7 @@ namespace Chat.Infrastructure.Repository
 
         public async Task AddAsync(Message message)
         {
+            this._db.Attach(message);
             await this._table.AddAsync(message);
             await this.SaveAsync();
         }
@@ -37,9 +38,19 @@ namespace Chat.Infrastructure.Repository
             await this.SaveAsync();
         }
 
-        public async Task<Message?> GetOneAsync(int id)
+        public async Task<Message?> GetMessageAsync(int id)
         {
-            return await this._table.Include(m => m.Sender).FirstOrDefaultAsync(m => m.Id == id);
+            return await this._table.FirstOrDefaultAsync(m => m.Id == id);
+        }
+
+
+        public async Task<Message?> GetFullMessageAsync(int id)
+        {
+            return await this._table
+                             .Include(m => m.Sender)
+                             .Include(m => m.RepliedTo)
+                             .Include(m => m.Room)
+                             .FirstOrDefaultAsync(m => m.Id == id);
         }
 
         public async Task<PagedList<Message>> GetPageAsync(PageParameters pageParameters, int roomId, string email)
@@ -49,6 +60,7 @@ namespace Chat.Infrastructure.Repository
                                      .Where(m => m.Room.Id == roomId && ((m.Sender.Email == email && m.HideForSender) ? false : true))
                                      .OrderByDescending(m => m.SendDate)
                                      .Include(m => m.Sender)
+                                     .Include(m => m.RepliedTo)
                                      .Skip((pageParameters.PageNumber - 1) * pageParameters.PageSize)
                                      .Take(pageParameters.PageSize)
                                      .ToListAsync();

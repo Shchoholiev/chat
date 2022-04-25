@@ -22,6 +22,10 @@
     height: calc(100vh - 128px);
     overflow-y: scroll;
   }
+
+  .chat-box-reply{
+    height: calc(100vh - 184px);
+  }
   
   .rounded-lg {
     border-radius: 0.5rem;

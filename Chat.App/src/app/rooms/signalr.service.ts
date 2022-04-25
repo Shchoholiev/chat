@@ -25,6 +25,10 @@ export class SignalrService {
     this.addListeners();
   }
 
+  public async disconnect(){
+    await this._hubConnection.stop();
+  }
+
   private addListeners() {
     this._hubConnection.on("MessageSent", (data: Message) => {
       this.messages.unshift(data);

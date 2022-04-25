@@ -5,6 +5,7 @@ import { CreateGroupComponent } from './rooms/create-group/create-group.componen
 import { MatDialog } from '@angular/material/dialog';
 import { UsersInGroupComponent } from './rooms/users-in-group/users-in-group.component';
 import { User } from '../shared/user.model';
+import { CreateDialogueComponent } from './rooms/create-dialogue/create-dialogue.component';
 
 @Injectable({
   providedIn: 'root'
@@ -51,6 +52,10 @@ export class RoomsService {
     this._dialog.open(UsersInGroupComponent, {
       data: { users: users },
     });
+  }
+
+  public openDialogueDialog(){
+    this._dialog.open(CreateDialogueComponent);
   }
 
   public create(room: Room){

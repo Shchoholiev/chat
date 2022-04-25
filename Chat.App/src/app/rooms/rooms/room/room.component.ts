@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../auth/auth.service';
 import { Message } from '../../../shared/message.model';
@@ -13,7 +13,7 @@ import { ManagingMessagesService } from './send-message/managing-messages.servic
   templateUrl: './room.component.html',
   styleUrls: ['./room.component.css']
 })
-export class RoomComponent implements OnInit {
+export class RoomComponent implements OnInit, OnDestroy {
 
   public room: Room = new Room;
 
@@ -55,5 +55,9 @@ export class RoomComponent implements OnInit {
 
   get roomName(){
     return this.room.users.find(u => u.email != this.authService.email)?.name;
+  }
+
+  async ngOnDestroy(): Promise<void> {
+    await this.signalrService.disconnect();
   }
 }

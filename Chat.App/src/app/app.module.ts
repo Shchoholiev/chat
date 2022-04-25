@@ -21,6 +21,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UsersInGroupComponent } from './rooms/rooms/users-in-group/users-in-group.component';
+import { CreateDialogueComponent } from './rooms/rooms/create-dialogue/create-dialogue.component';
 
 export function tokenGetter() {
   return localStorage.getItem("jwt");
@@ -39,7 +40,8 @@ export function tokenGetter() {
     SentMessageComponent,
     ServerMessageComponent,
     CreateGroupComponent,
-    UsersInGroupComponent
+    UsersInGroupComponent,
+    CreateDialogueComponent
   ],
   imports: [
     BrowserModule,

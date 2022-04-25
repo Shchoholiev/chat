@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { RoomsService } from '../rooms/rooms.service';
 import { Tokens } from './tokens.model';
 
 @Injectable({
@@ -9,7 +9,8 @@ import { Tokens } from './tokens.model';
 })
 export class AuthService {
 
-  constructor(private _http: HttpClient, private _jwtHelper: JwtHelperService, private _router: Router) { }
+  constructor(private _jwtHelper: JwtHelperService, private _router: Router,
+              private _roomsService: RoomsService) { }
 
   get name(){
     var token = localStorage.getItem("jwt");
@@ -35,6 +36,7 @@ export class AuthService {
   login(token: Tokens){
     localStorage.setItem('jwt', token.accessToken);
     localStorage.setItem('refreshToken', token.refreshToken);
+    this._roomsService.refresh();
   }
 
   logout(){

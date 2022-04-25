@@ -14,7 +14,7 @@ export class RoomsComponent implements OnInit {
   constructor(public roomsService: RoomsService, private _router: Router) { }
 
   ngOnInit(): void {
-    this.roomsService.getPage(1);
+    this.roomsService.refresh();
     this.chosenRoomId = +this._router.url.split('/')[2];
     this._router.events.subscribe((event) => {
       if (event instanceof NavigationEnd) {

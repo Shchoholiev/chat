@@ -10,7 +10,8 @@
         <div class="input-group">
             <input type="email" [(ngModel)]="this.email" name="email" placeholder="Type an email"
                 class="form-control bg-light mb-3" (keydown)="this.error = ''"/>
-            <button type="button" class="btn btn-primary" style="height: 38px;" (click)="this.addUser()">
+            <button type="button" class="btn btn-primary" style="height: 38px;" (click)="this.addUser()"
+                [disabled]="!this.email">
                 Add User
             </button>
         </div>

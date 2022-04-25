@@ -1,8 +1,11 @@
-<div class="px-4 pt-4 pb-2 chat-box bg-white d-flex flex-column-reverse" 
-    [ngClass]="{ 'chat-box-reply': managingMessages.replyMessage }">
-  <div *ngFor="let m of signalrService.messages" [ngSwitch]="m?.sender?.name">
-    <app-server-message *ngSwitchCase="null" [message]="m"></app-server-message>
-    <app-sent-message *ngSwitchCase="authService.name" [message]="m"></app-sent-message>
-    <app-received-message *ngSwitchDefault [message]="m"></app-received-message>
+<section class="d-flex flex-column justify-content-between">
+  <div class="px-4 pt-4 pb-2 chat-box bg-white d-flex flex-column-reverse" 
+      [ngClass]="{ 'chat-box-reply': managingMessages.replyMessage.id || managingMessages.inPersonMessage.id }">
+    <div *ngFor="let m of signalrService.messages" [ngSwitch]="m?.sender?.name">
+      <app-server-message *ngSwitchCase="null" [message]="m"></app-server-message>
+      <app-sent-message *ngSwitchCase="authService.name" [message]="m"></app-sent-message>
+      <app-received-message *ngSwitchDefault [message]="m"></app-received-message>
+    </div>
   </div>
-</div>
+  <app-send-message></app-send-message>
+</section>

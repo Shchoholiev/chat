@@ -20,9 +20,13 @@ namespace Chat.API.SignalR
             this._connectionsRepository = connectionsRepository;
         }
 
-        public async Task ChooseChat(string roomId)
+        public async Task ChooseChat(string newRoomId, string oldRoomId)
         {
-            await this.Groups.AddToGroupAsync(this.Context.ConnectionId, roomId);
+            if (int.Parse(oldRoomId) > 0)
+            {
+                await this.Groups.RemoveFromGroupAsync(this.Context.ConnectionId, oldRoomId);
+            }
+            await this.Groups.AddToGroupAsync(this.Context.ConnectionId, newRoomId);
         }
 
         public override async Task<Task> OnConnectedAsync()

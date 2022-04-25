@@ -1,5 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { MessagesService } from 'src/app/rooms/messages.service';
 import { MessageDTO } from 'src/app/shared/message-dto.model';
 import { Message } from 'src/app/shared/message.model';
@@ -17,7 +16,7 @@ export class ManagingMessagesService {
 
   public editMessage: Message = new Message;
 
-  constructor(private _messagesService: MessagesService, @Inject(DOCUMENT) document: Document) { }
+  constructor(private _messagesService: MessagesService) { }
 
   public edit(message: Message){
     if (this.replyMessage) {
@@ -84,6 +83,12 @@ export class ManagingMessagesService {
   public cancelEdit(){
     this.editMessage = new Message;
     this.message.text = "";
+  }
+
+  public clearAll(){
+    this.cancelEdit();
+    this.cancelReply();
+    this.cancelReplyInPerson();
   }
 
   public async toMessage(messageId: number) {

@@ -29,8 +29,9 @@ export class RoomComponent implements OnInit {
     await this.signalrService.connect();
 
     this._route.params.subscribe(async params => {
+      var oldRoomId = this.room?.id?.toString() || '0';
       var id = params['id'];
-      await this.signalrService.chooseChat(id);
+      await this.signalrService.chooseChat(id.toString(), oldRoomId);
       this._roomsService.getRoom(id).subscribe(
         response => {
           this.room = response;
@@ -38,6 +39,8 @@ export class RoomComponent implements OnInit {
           this.getMessages(1);
         } 
       );
+      
+      this.managingMessages.clearAll();
     });
   }
 

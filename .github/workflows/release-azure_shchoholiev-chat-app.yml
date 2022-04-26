@@ -3,11 +3,7 @@
 
 name: Build and deploy Node.js app to Azure Web App - shchoholiev-chat-app
 
-on:
-  push:
-    branches:
-      - release/azure
-  workflow_dispatch:
+on: [workflow_dispatch]
 
 jobs:
   build:
@@ -26,18 +22,12 @@ jobs:
           npm install
           npm run build --if-present
         working-directory: ./Chat.APP
-        
-      - name: Zip artifact for deployment
-        run: Compress-Archive . release.zip
       
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: node-app
           path: .
-     
-      - name: unzip artifact for deployment
-        run: Expand-Archive release.zip
 
   deploy:
     runs-on: ubuntu-latest

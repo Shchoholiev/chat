@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "apis1": {
+      "apiEndpoint": "https://chatapiapi.azure-api.net/",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.ApiManagement/service/ChatAPIapi/apis/ChatAPI",
+      "type": "apis.azure"
+    },
+    "mssql1": {
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/shchoholiev-chat-server/databases/shchoholiev-chat-db",
+      "type": "mssql.azure",
+      "connectionId": "ChatDbConnection"
+    }
+  }
+}

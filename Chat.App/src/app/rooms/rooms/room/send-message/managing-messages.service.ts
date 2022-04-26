@@ -67,7 +67,7 @@ export class ManagingMessagesService {
           this.cancelReply();
         }
 
-        await this.delay(2);
+        await this.delay(100);
         var element = document.getElementById('scroll');
         if (element) {
           element.scrollTop = element.scrollHeight;

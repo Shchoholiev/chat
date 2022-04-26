@@ -96,16 +96,18 @@ namespace Chat.API.Controllers
             }
 
             room.Users.Add(user);
-            this._roomsRepository.Attach(room);
-            await this._roomsRepository.UpdateAsync(room);
-
             var message = new Message
             {
-                Text = $"{user.Name} has joined the group {room.DisplayName}.",
+                Text = $"{user.Name} has joined the group.",
                 SendDate = DateTime.Now,
-                Room = room
+                Room = room,
             };
-            await this._hubContext.Clients.Group(room.Id.ToString()).SendAsync("MessageSent", message);
+
+            this._roomsRepository.Attach(user, message);
+            await this._roomsRepository.SaveAsync();
+
+            var signalrMessage = this._mapper.Map(message);
+            await this._hubContext.Clients.Group(room.Id.ToString()).SendAsync("MessageSent", signalrMessage);
 
             return Ok();
         }

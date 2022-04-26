@@ -43,21 +43,7 @@ export class RoomsService {
       }
     )
   }
-
-  public openGroupDialog(){
-    this._dialog.open(CreateGroupComponent);
-  }
-
-  public openUsersInGroupDialog(users: User[]){
-    this._dialog.open(UsersInGroupComponent, {
-      data: { users: users },
-    });
-  }
-
-  public openDialogueDialog(){
-    this._dialog.open(CreateDialogueComponent);
-  }
-
+  
   public create(room: Room){
     this._http.post(this._baseURL, room).subscribe(
       () => {
@@ -65,5 +51,23 @@ export class RoomsService {
         this._dialog.closeAll();
       }
     );
+  }
+
+  public openGroupDialog(){
+    this._dialog.open(CreateGroupComponent);
+  }
+
+  public openDialogueDialog(){
+    this._dialog.open(CreateDialogueComponent);
+  }
+
+  public openUsersInGroupDialog(users: User[], roomId: number){
+    this._dialog.open(UsersInGroupComponent, {
+      data: { users: users, roomId: roomId },
+    });
+  }
+
+  public addMember(email: string, roomId: number){
+    this._http.put(this._baseURL + '/add-member', { email: email, roomId: roomId }).subscribe();
   }
 }

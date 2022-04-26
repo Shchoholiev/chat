@@ -62,7 +62,15 @@ export class RoomComponent implements OnInit, OnDestroy {
   public getMessages(pageNumber: number){
     this._messagesService.getPage(this.pageSize, pageNumber, this.room.id).subscribe(
       response => {
-        this.signalrService.messages = (response.body as Message[]).concat(this.signalrService.messages);
+        var newMessages = response.body as Message[];
+        
+        if (newMessages.length) {
+          for (let i = newMessages.length - 1; i >= 0; i--) {
+            if (!this.signalrService.messages.find(m => m.id == newMessages[i].id)) {
+              this.signalrService.messages.unshift(newMessages[i]);
+            }
+          }
+        }
 
         var metadata = response.headers.get('x-pagination');
         if (metadata) {
@@ -73,8 +81,8 @@ export class RoomComponent implements OnInit, OnDestroy {
     )
   }
 
-  public get roomName(){
-    return this.room.users.find(u => u.email != this.authService.email)?.name;
+  public get secondUser(){
+    return this.room.users.find(u => u.email != this.authService.email);
   }
 
   private delay = (ms: number) => new Promise(res => setTimeout(res, ms));

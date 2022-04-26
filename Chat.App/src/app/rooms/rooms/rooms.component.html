@@ -1,6 +1,6 @@
 <div class="row" style="margin-right: 0;">
     <section class="col-3" style="padding-right: 0;">
-        <div class="messages-box">
+        <div class="messages-box" infinite-scroll [scrollWindow]="false" (scrolled)="this.roomsService.loadNext()">
             <div class="list-group list-group-flush">
                 <a *ngFor="let r of this.roomsService.rooms" [routerLink]="[ r.id ]" 
                     [ngClass]="{'active text-white' : chosenRoomId == r.id }" 

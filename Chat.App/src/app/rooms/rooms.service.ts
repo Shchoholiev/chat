@@ -15,10 +15,10 @@ export class RoomsService {
   private readonly _baseURL = 'https://localhost:7083/api/rooms';
 
   public rooms: Room[] = [];
-  
-  public metadata: string | null;
 
   public pageSize = 15;
+
+  public pageNumber = 1;
 
   constructor(private _http: HttpClient, private _dialog: MatDialog) { }
 
@@ -39,7 +39,11 @@ export class RoomsService {
     ).subscribe(
       response => {
         this.rooms = this.rooms.concat(response.body as Room[]);
-        this.metadata = response.headers.get('x-pagination');
+        var metadata = response.headers.get('x-pagination');
+        if (metadata) {
+          var object = JSON.parse(metadata);
+          this.pageNumber = Number(object.PageNumber);
+        }
       }
     )
   }
@@ -69,5 +73,9 @@ export class RoomsService {
 
   public addMember(email: string, roomId: number){
     this._http.put(this._baseURL + '/add-member', { email: email, roomId: roomId }).subscribe();
+  }
+
+  public loadNext(){
+    this.getPage(this.pageNumber + 1);
   }
 }

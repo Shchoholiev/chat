@@ -8,8 +8,8 @@ using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
-//var context = new ApplicationContext();
-//await DbInitializer.Initialize(context, builder.Configuration);
+var context = new ApplicationContext();
+await DbInitializer.Initialize(context, builder.Configuration);
 
 builder.Services.AddJWTTokenServices(builder.Configuration);
 
@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("allowMyOrigin",
     builder =>
     {
-        builder.WithOrigins("http://localhost:4200")
+        builder.WithOrigins("https://shchoholiev-chat-app.azurewebsites.net/")
                .AllowAnyMethod()
                .AllowAnyHeader()
                .AllowCredentials()

@@ -18,8 +18,10 @@ namespace Chat.Infrastructure.EF
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            string connectionString = @"server=(LocalDb)\MSSQLLocalDB;database=Chat;integrated security=True;
-                    MultipleActiveResultSets=True;App=EntityFramework;";
+            string connectionString = @"Server=tcp:shchoholiev-chat-server.database.windows.net," +
+                "1433;Initial Catalog=shchoholiev-chat-db;Persist Security Info=False;User " +
+                "ID=shchoholiev;Password=27rhefoYvd20;MultipleActiveResultSets=False;" +
+                "Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             optionsBuilder.UseSqlServer(connectionString);
         }
 

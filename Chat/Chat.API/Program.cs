@@ -1,5 +1,4 @@
 using Chat.API;
-using Chat.API.Controllers;
 using Chat.API.SignalR;
 using Chat.Infrastructure;
 using Chat.Infrastructure.DataInitializer;
@@ -9,8 +8,8 @@ using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var context = new ApplicationContext();
-await DbInitializer.Initialize(context, builder.Configuration);
+//var context = new ApplicationContext();
+//await DbInitializer.Initialize(context, builder.Configuration);
 
 builder.Services.AddJWTTokenServices(builder.Configuration);
 

@@ -12,8 +12,10 @@ namespace Chat.Infrastructure
     {
         public static IServiceCollection AddInfrastructure(this IServiceCollection services)
         {
-            var connectionString = @"server=(LocalDb)\MSSQLLocalDB;database=Chat;integrated security=True;
-                    MultipleActiveResultSets=True;App=EntityFramework;";
+            var connectionString = @"Server=tcp:shchoholiev-chat-server.database.windows.net," +
+                "1433;Initial Catalog=shchoholiev-chat-db;Persist Security Info=False;" +
+                "User ID=shchoholiev;Password=27rhefoYvd20;MultipleActiveResultSets=False;" +
+                "Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
 
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(connectionString)

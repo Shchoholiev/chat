@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { MessagesService } from 'src/app/rooms/messages.service';
+import { RoomsService } from 'src/app/rooms/rooms.service';
 import { MessageDTO } from 'src/app/shared/message-dto.model';
 import { Message } from 'src/app/shared/message.model';
 
@@ -51,7 +52,7 @@ export class ManagingMessagesService {
     this.message.repliedTo = message.id;
   }
 
-  public send(){
+  public async send(){
     if (this.inPersonMessage?.id) {
       this._messagesService.replyInPerson(this.inPersonMessage.sender.email, this.message);
       this.cancelReplyInPerson();
@@ -64,6 +65,12 @@ export class ManagingMessagesService {
         this._messagesService.send(this.message);
         if (this.replyMessage) {
           this.cancelReply();
+        }
+
+        await this.delay(100);
+        var element = document.getElementById('scroll');
+        if (element) {
+          element.scrollTop = element.scrollHeight;
         }
       }
     }

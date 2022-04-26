@@ -28,7 +28,8 @@
         <input type="text" [(ngModel)]="this.managingMessages.message.text" placeholder="Type a message" name="text"
               class="form-control rounded-0 border-0 py-4 bg-light" autocomplete="off" required autofocus>
         <div class="input-group-append d-flex">
-          <button *ngIf="this.managingMessages.editMessage?.id" class="btn btn-link">
+          <button type="button" *ngIf="this.managingMessages.editMessage?.id" class="btn btn-link" 
+                  [disabled]="form.invalid" (click)="this.managingMessages.cancelEdit()">
             <i class="fa-xl fa-solid fa-xmark text-danger"></i>
           </button>
           <button type="submit" class="btn btn-link mx-3" [disabled]="form.invalid">

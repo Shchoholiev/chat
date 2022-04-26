@@ -1,0 +1,26 @@
+<form class="d-flex flex-column" (ngSubmit)="onSubmit()" #form="ngForm" style="width: 300px;">
+    <h5 class="mx-auto mb-3 text-secondary">Create Group</h5>
+    <input type="text" [(ngModel)]="this.room.displayName" placeholder="Type a name" name="displayName"
+            class="form-control bg-light mb-3" autocomplete="off" required autofocus/>
+    <div>
+        <h6 class="text-secondary">Users:</h6>
+        <div class="d-flex flex-wrap mb-2">
+            <div class="btn bg-light me-2 mb-2" *ngFor="let u of room.users">{{u.name}}</div>
+        </div>
+        <div class="input-group">
+            <input type="email" [(ngModel)]="this.email" name="email" placeholder="Type an email"
+                class="form-control bg-light mb-3" (keydown)="this.error = ''"/>
+            <button type="button" class="btn btn-primary" style="height: 38px;" (click)="this.addUser()"
+                [disabled]="!this.email">
+                Add User
+            </button>
+        </div>
+        <p class="text-danger">{{this.error}}</p>
+    </div>
+    <div class="d-flex">
+        <button type="submit" class="btn btn-primary mx-auto" [disabled]="form.invalid || !(this.room.users.length > 1)">
+            <i class="fa-solid fa-circle-plus text-white"></i>
+            Create
+        </button>
+    </div>
+</form>

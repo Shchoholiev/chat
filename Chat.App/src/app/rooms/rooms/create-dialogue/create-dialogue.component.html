@@ -1,0 +1,12 @@
+<form class="d-flex flex-column" (ngSubmit)="onSubmit()" #form="ngForm" style="width: 300px;">
+    <h5 class="mx-auto mb-3 text-secondary">Create Dialogue</h5>
+    <input type="email" [(ngModel)]="this.email" name="email" placeholder="Type an email"
+            class="form-control bg-light mb-3" (keydown)="this.error = ''" autocomplete="off" required/>
+    <p class="text-danger">{{this.error}}</p>
+    <div class="d-flex">
+        <button type="submit" class="btn btn-primary mx-auto" [disabled]="form.invalid">
+            <i class="fa-solid fa-circle-plus text-white"></i>
+            Create
+        </button>
+    </div>
+</form>

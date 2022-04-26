@@ -66,6 +66,7 @@ namespace Chat.Infrastructure.Repository
                                      .ToListAsync();
             var totalCount = await this._table.Where(m => m.Room.Id == roomId 
                 && ((m.Sender.Email == email && m.HideForSender) ? false : true)).CountAsync();
+            messages.Reverse();
 
             return new PagedList<Message>(messages, pageParameters, totalCount);
         }

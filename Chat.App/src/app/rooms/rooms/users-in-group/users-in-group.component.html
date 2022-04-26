@@ -1,0 +1,17 @@
+<div class="d-flex flex-column">
+    <div class="d-flex flex-wrap mb-2" style="width: 400px;">
+        <div class="btn bg-light me-2 mb-2" *ngFor="let u of data.users">
+            {{u.name}} - <span class="text-muted">{{u.email}}</span>
+        </div>
+    </div>
+    <div class="input-group">
+        <input type="email" [(ngModel)]="this.email" name="email" placeholder="Type an email"
+            class="form-control bg-light mb-3" (keydown)="this.error = ''"/>
+        <button type="button" class="btn btn-primary" style="height: 38px;" (click)="onSubmit()"
+            [disabled]="!this.email">
+            Add User
+        </button>
+    </div>
+    <p class="text-danger">{{this.error}}</p>
+    <button mat-button mat-dialog-close class="m-auto">Close</button>
+</div>

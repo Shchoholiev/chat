@@ -142,11 +142,12 @@ namespace Chat.API.Controllers
         [HttpPost("replyInPerson/{email}")]
         public async Task<IActionResult> ReplyInPerson(string email, [FromBody] MessageDTO messageDTO)
         {
+            var currentEmail = this.User?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             var room = await this._roomsRepository.GetOneAsync(r => r.DisplayName == null 
-                                                               && r.Users.Any(u => u.Email == email));
+                                                               && r.Users.Any(u => u.Email == email) 
+                                                               && r.Users.Any(u => u.Email == currentEmail));
             if (room == null)
             {
-                var currentEmail = this.User?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
                 var currentUser = await _usersRepository.GetOneAsync(u => u.Email == currentEmail);
                 var recipient = await _usersRepository.GetOneAsync(u => u.Email == email);
                 room = new Room

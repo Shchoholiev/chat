@@ -12,9 +12,9 @@ export class AccountService {
 
   private readonly baseURL = 'https://localhost:7083/api/account';
 
-  constructor(private _http: HttpClient, public _authService: AuthService, private _router: Router) { }
+  constructor(private _http: HttpClient, private _authService: AuthService, private _router: Router) { }
 
-  register(form: Register){
+  public register(form: Register){
     this._http.post<any>(this.baseURL + '/register', form).subscribe(
       response => {
         this._authService.login(response);
@@ -23,12 +23,16 @@ export class AccountService {
     );
   }
 
-  login(form: Login){
+  public login(form: Login){
     this._http.post<any>(this.baseURL + '/login', form).subscribe(
       response => {
         this._authService.login(response);
         this._router.navigate([form.returnUrl]);
       }
     );
+  }
+
+  public getUser(email: string){
+    return this._http.get(`${this.baseURL}/${email}`);
   }
 }

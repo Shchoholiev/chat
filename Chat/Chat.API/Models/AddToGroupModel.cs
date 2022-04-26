@@ -1,6 +1,6 @@
 ﻿namespace Chat.API.Models
 {
-    public class AddToGroupModel
+    public class AddToRoomModel
     {
         public string Email { get; set; }
 

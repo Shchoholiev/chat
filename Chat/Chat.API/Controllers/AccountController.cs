@@ -26,6 +26,13 @@ namespace Chat.API.Controllers
             this._tokenService = tokenService;
         }
 
+        [HttpGet("{email}")]
+        public async Task<ActionResult<User>> GetUser(string email)
+        {
+            return await this._usersService.GetUserAsync(email);
+        }
+
+
         [HttpPut]
         public async Task<IActionResult> Update([FromBody] UserDTO userDTO)
         {

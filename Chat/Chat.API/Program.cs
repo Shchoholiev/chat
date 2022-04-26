@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("allowMyOrigin",
     builder =>
     {
-        builder.WithOrigins("https://shchoholiev-chat-app.azurewebsites.net/")
+        builder.WithOrigins("https://shchoholiev-chat-app.azurewebsites.net")
                .AllowAnyMethod()
                .AllowAnyHeader()
                .AllowCredentials()

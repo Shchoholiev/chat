@@ -56,7 +56,7 @@ export function tokenGetter() {
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,
-        allowedDomains: ["localhost:7083"],
+        allowedDomains: ["shchoholiev-chat.azurewebsites.net"],
         disallowedRoutes: []
       }
     })

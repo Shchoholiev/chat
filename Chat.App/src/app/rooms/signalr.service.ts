@@ -10,7 +10,7 @@ export class SignalrService {
 
   private _hubConnection: HubConnection
 
-  private readonly _hubURL = 'https://localhost:7083/chat';
+  private readonly _hubURL = 'https://shchoholiev-chat.azurewebsites.net/chat';
 
   public messages: Message[] = [];
 

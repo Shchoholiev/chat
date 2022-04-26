@@ -8,7 +8,7 @@ import { RoomsService } from './rooms.service';
 })
 export class MessagesService {
 
-  private readonly _baseURL = 'https://localhost:7083/api/messages';
+  private readonly _baseURL = 'https://shchoholiev-chat.azurewebsites.net/api/messages';
 
   constructor(private _http: HttpClient, private _roomsService: RoomsService) { }
 

@@ -42,7 +42,7 @@ export class RoomComponent implements OnInit, OnDestroy {
       );
       this.managingMessages.clearAll();
 
-      await this.delay(100);
+      await this.delay(1000);
       var element = document.getElementById('scroll');
       if (element) {
         element.scrollTop = element.scrollHeight;

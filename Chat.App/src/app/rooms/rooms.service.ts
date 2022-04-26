@@ -12,7 +12,7 @@ import { CreateDialogueComponent } from './rooms/create-dialogue/create-dialogue
 })
 export class RoomsService {
 
-  private readonly _baseURL = 'https://localhost:7083/api/rooms';
+  private readonly _baseURL = 'https://shchoholiev-chat.azurewebsites.net/api/rooms';
 
   public rooms: Room[] = [];
 

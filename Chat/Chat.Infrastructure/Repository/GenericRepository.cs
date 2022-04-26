@@ -112,15 +112,7 @@ namespace Chat.Infrastructure.Repository
 
         public async Task SaveAsync()
         {
-            try
-            {
-                await this._db.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-
-                throw;
-            }
+            await this._db.SaveChangesAsync();
         }
     }
 }

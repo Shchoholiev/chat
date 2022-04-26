@@ -46,21 +46,5 @@ namespace Chat.API.Controllers
                 RefreshToken = newRefreshToken
             });
         }
-
-        [Authorize]
-        [HttpPost("revoke")]
-        public async Task<IActionResult> Revoke()
-        {
-            var email = User?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var user = await this._usersRepository.GetOneAsync(u => u.Email == email);
-            if (user == null)
-            {
-                return BadRequest();
-            }
-            user.UserToken = null;
-            await this._usersRepository.UpdateAsync(user);
-
-            return NoContent();
-        }
     }
 }

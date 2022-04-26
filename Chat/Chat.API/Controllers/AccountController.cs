@@ -18,8 +18,6 @@ namespace Chat.API.Controllers
 
         private readonly ITokenService _tokenService;
 
-        private readonly Mapper _mapper = new();
-
         public AccountController(IUsersService usersService, ITokenService tokenService)
         {
             this._usersService = usersService;
@@ -30,27 +28,6 @@ namespace Chat.API.Controllers
         public async Task<ActionResult<User>> GetUser(string email)
         {
             return await this._usersService.GetUserAsync(email);
-        }
-
-
-        [HttpPut]
-        public async Task<IActionResult> Update([FromBody] UserDTO userDTO)
-        {
-            var email = User?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var user = await this._usersService.GetUserAsync(email);
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            if (email != userDTO.Email && await this._usersService.GetUserAsync(email) != null)
-            {
-                return BadRequest("User with this email already exists");
-            }
-
-            this._mapper.Map(user, userDTO);
-            var tokens = await UpdateUserTokens(user);
-            return Ok(tokens);
         }
 
         [HttpPost("register")]

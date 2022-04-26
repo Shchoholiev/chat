@@ -7,7 +7,8 @@
       <p class="ms-2 m-auto">{{room.users.length}}</p>
     </div>
   </div>
-  <div class="px-4 pt-4 pb-2 chat-box bg-white d-flex flex-column-reverse" 
+  <div class="px-4 pt-4 pb-2 chat-box bg-white d-flex flex-column" id="scroll" 
+      infinite-scroll [scrollWindow]="false" (scrolledUp)="loadNext()"
       [ngClass]="{ 'chat-box-reply': managingMessages.replyMessage.id || managingMessages.inPersonMessage.id }">
     <div *ngFor="let m of signalrService.messages" [ngSwitch]="m?.sender?.name">
       <app-server-message *ngSwitchCase="null" [message]="m"></app-server-message>

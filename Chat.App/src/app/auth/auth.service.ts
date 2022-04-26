@@ -36,7 +36,7 @@ export class AuthService {
   login(token: Tokens){
     localStorage.setItem('jwt', token.accessToken);
     localStorage.setItem('refreshToken', token.refreshToken);
-    this._roomsService.refresh();
+    this._roomsService.rooms = [];
   }
 
   logout(){

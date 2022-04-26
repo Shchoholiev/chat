@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http'
 import { MessageDTO } from '../shared/message-dto.model';
-import { Message } from '../shared/message.model';
 import { RoomsService } from './rooms.service';
 
 @Injectable({

@@ -52,7 +52,7 @@ export class ManagingMessagesService {
     this.message.repliedTo = message.id;
   }
 
-  public send(){
+  public async send(){
     if (this.inPersonMessage?.id) {
       this._messagesService.replyInPerson(this.inPersonMessage.sender.email, this.message);
       this.cancelReplyInPerson();
@@ -65,6 +65,12 @@ export class ManagingMessagesService {
         this._messagesService.send(this.message);
         if (this.replyMessage) {
           this.cancelReply();
+        }
+
+        await this.delay(2);
+        var element = document.getElementById('scroll');
+        if (element) {
+          element.scrollTop = element.scrollHeight;
         }
       }
     }

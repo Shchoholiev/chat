@@ -22,6 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { UsersInGroupComponent } from './rooms/rooms/users-in-group/users-in-group.component';
 import { CreateDialogueComponent } from './rooms/rooms/create-dialogue/create-dialogue.component';
+import { InfiniteScrollModule } from 'ngx-infinite-scroll';
 
 export function tokenGetter() {
   return localStorage.getItem("jwt");
@@ -51,6 +52,7 @@ export function tokenGetter() {
     MatDialogModule,
     MatButtonModule,
     BrowserAnimationsModule,
+    InfiniteScrollModule,
     JwtModule.forRoot({
       config: {
         tokenGetter: tokenGetter,

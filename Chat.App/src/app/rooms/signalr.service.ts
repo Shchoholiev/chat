@@ -31,7 +31,7 @@ export class SignalrService {
 
   private addListeners() {
     this._hubConnection.on("MessageSent", (data: Message) => {
-      this.messages.unshift(data);
+      this.messages.push(data);
     });
     this._hubConnection.on("MessageEdited", (data: Message) => {
       var message = this.messages.find(m => m.id == data.id);

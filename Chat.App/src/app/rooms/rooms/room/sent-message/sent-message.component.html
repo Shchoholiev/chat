@@ -1,4 +1,4 @@
-<div class="media w-75 ml-auto mb-1" style="margin-left: auto;margin-right:0;">
+<div class="media ms-auto mb-1 me-0" style="width: fit-content; max-width: 75%;">
     <div class="media-body ml-3">
       <div id="message-{{message.id}}" class="bg-primary rounded py-2 px-3 mb-1 transition">
         <div class="d-flex text-reply" *ngIf="this.message.repliedTo" style="cursor: pointer;"
@@ -22,7 +22,7 @@
           <a (click)="messagesService.hide(this.message.id)" class="link-secondary nav-link p-0"
               style="cursor: pointer;">Delete For Me</a>
         </nav>
-        <p class="small text-muted mb-0">{{getTime()}}</p>
+        <p class="small text-muted mb-0 ms-5">{{getTime()}}</p>
       </div>  
     </div>
 </div>

@@ -25,7 +25,7 @@ export class CreateGroupComponent implements OnInit {
     this._usersService.getUser(this._authService.email).subscribe(
       response => this.room.users.push(response as User)
     );
-  }
+  } 
 
   public onSubmit(){
     this._roomsService.create(this.room);

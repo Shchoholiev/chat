@@ -89,12 +89,12 @@ namespace Chat.API.Controllers
         public async Task<IActionResult> AddMember([FromBody] AddToRoomModel model)
         {
             var room = await this._roomsRepository.GetOneAsync(model.RoomId, r => r.Users);
-            if (room == null || room.DisplayName == null)
+            var user = await this._usersRepository.GetOneAsync(u => u.Email == model.Email);
+            if (room == null || room.DisplayName == null || user == null)
             {
                 return BadRequest();
             }
 
-            var user = await this._usersRepository.GetOneAsync(u => u.Email == model.Email);
             room.Users.Add(user);
             this._roomsRepository.Attach(room);
             await this._roomsRepository.UpdateAsync(room);

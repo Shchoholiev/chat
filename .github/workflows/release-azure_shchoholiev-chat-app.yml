@@ -26,12 +26,18 @@ jobs:
           npm install
           npm run build --if-present
         working-directory: ./Chat.APP
+        
+      - name: Zip artifact for deployment
+        run: zip release.zip ./* -r
       
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: node-app
           path: .
+     
+      - name: unzip artifact for deployment
+        run: unzip release.zip
 
   deploy:
     runs-on: ubuntu-latest

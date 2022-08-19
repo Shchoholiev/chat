@@ -1,4 +1,4 @@
-﻿using Chat.Application.Interfaces;
+﻿using Chat.Application.Interfaces.Services.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Chat.Infrastructure.Services
+namespace Chat.Infrastructure.Services.Identity
 {
     public class TokenService : ITokenService
     {
@@ -14,12 +14,12 @@ namespace Chat.Infrastructure.Services
 
         public TokenService(IConfiguration configuration)
         {
-            this._configuration = configuration;
+            _configuration = configuration;
         }
 
         public string GenerateAccessToken(IEnumerable<Claim> claims)
         {
-            var tokenOptions = this.GetTokenOptions(claims);
+            var tokenOptions = GetTokenOptions(claims);
             var tokenString = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
             return tokenString;
         }
@@ -46,7 +46,7 @@ namespace Chat.Infrastructure.Services
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out SecurityToken securityToken);
-            
+
             return principal;
         }
 

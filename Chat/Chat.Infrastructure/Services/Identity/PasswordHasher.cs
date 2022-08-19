@@ -1,7 +1,7 @@
-﻿using Chat.Application.Interfaces;
+﻿using Chat.Application.Interfaces.Services.Identity;
 using System.Security.Cryptography;
 
-namespace Chat.Infrastructure.Services
+namespace Chat.Infrastructure.Services.Identity
 {
     public class PasswordHasher : IPasswordHasher
     {
@@ -19,7 +19,7 @@ namespace Chat.Infrastructure.Services
 
         public string Hash(string password)
         {
-            using (var algorithm = new Rfc2898DeriveBytes(password, SaltSize, _iterations, 
+            using (var algorithm = new Rfc2898DeriveBytes(password, SaltSize, _iterations,
                                                           HashAlgorithmName.SHA256))
             {
                 var key = Convert.ToBase64String(algorithm.GetBytes(KeySize));

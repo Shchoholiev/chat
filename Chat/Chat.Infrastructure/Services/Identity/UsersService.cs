@@ -1,10 +1,10 @@
 ﻿using Chat.Application.Descriptions;
-using Chat.Application.Interfaces;
-using Chat.Application.IRepositories;
+using Chat.Application.Interfaces.Repositories;
+using Chat.Application.Interfaces.Services.Identity;
 using Chat.Application.Models.Dtos;
 using Chat.Core.Entities.Identity;
 
-namespace Chat.Infrastructure.Services
+namespace Chat.Infrastructure.Services.Identity
 {
     public class UsersService : IUsersService
     {
@@ -14,14 +14,14 @@ namespace Chat.Infrastructure.Services
 
         public UsersService(IGenericRepository<User> userRepository, IPasswordHasher passwordHasher)
         {
-            this._usersRepository = userRepository;
-            this._passwordHasher = passwordHasher;
+            _usersRepository = userRepository;
+            _passwordHasher = passwordHasher;
         }
 
         public async Task<OperationDetails> RegisterAsync(UserDto userDTO)
         {
             var operationDetails = new OperationDetails();
-            if (await this._usersRepository.GetOneAsync(u => u.Email == userDTO.Email) != null)
+            if (await _usersRepository.GetOneAsync(u => u.Email == userDTO.Email) != null)
             {
                 operationDetails.AddError("This email is already used!");
                 return operationDetails;
@@ -36,8 +36,8 @@ namespace Chat.Infrastructure.Services
 
             try
             {
-                user.PasswordHash = this._passwordHasher.Hash(userDTO.Password);
-                await this._usersRepository.AddAsync(user);
+                user.PasswordHash = _passwordHasher.Hash(userDTO.Password);
+                await _usersRepository.AddAsync(user);
             }
             catch (Exception e)
             {
@@ -49,7 +49,7 @@ namespace Chat.Infrastructure.Services
 
         public async Task<OperationDetails> LoginAsync(UserDto userDTO)
         {
-            var user = await this._usersRepository.GetOneAsync(u => u.Email == userDTO.Email);
+            var user = await _usersRepository.GetOneAsync(u => u.Email == userDTO.Email);
 
             var operationDetails = new OperationDetails();
             if (user == null)
@@ -58,7 +58,7 @@ namespace Chat.Infrastructure.Services
                 return operationDetails;
             }
 
-            if (!this._passwordHasher.Check(userDTO.Password, user.PasswordHash))
+            if (!_passwordHasher.Check(userDTO.Password, user.PasswordHash))
             {
                 operationDetails.AddError("Incorrect password!");
             }
@@ -68,26 +68,26 @@ namespace Chat.Infrastructure.Services
 
         public async Task<OperationDetails> UpdateUserAsync(User user)
         {
-            this._usersRepository.Attach(user);
-            await this._usersRepository.UpdateAsync(user);
+            _usersRepository.Attach(user);
+            await _usersRepository.UpdateAsync(user);
             return new OperationDetails();
         }
 
         public async Task DeleteAsync(string email)
         {
-            var user = await this._usersRepository.GetOneAsync(u => u.Email == email);
-            await this._usersRepository.DeleteAsync(user);
+            var user = await _usersRepository.GetOneAsync(u => u.Email == email);
+            await _usersRepository.DeleteAsync(user);
         }
 
         public async Task<User?> GetUserAsync(string email)
         {
-            return await this._usersRepository.GetOneAsync(u => u.Email == email, u => u.UserToken, 
+            return await _usersRepository.GetOneAsync(u => u.Email == email, u => u.UserToken,
                                                            u => u.Connections, u => u.Rooms);
         }
 
         public async Task SaveAsync()
         {
-            await this._usersRepository.SaveAsync();
+            await _usersRepository.SaveAsync();
         }
     }
 }

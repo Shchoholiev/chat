@@ -2,7 +2,7 @@
 using Chat.Core.Entities;
 using System.Linq.Expressions;
 
-namespace Chat.Application.IRepositories
+namespace Chat.Application.Interfaces.Repositories
 {
     public interface IMessagesRepository
     {

@@ -1,4 +1,4 @@
-﻿using Chat.Application.IRepositories;
+﻿using Chat.Application.Interfaces.Repositories;
 using Chat.Core.Entities.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;

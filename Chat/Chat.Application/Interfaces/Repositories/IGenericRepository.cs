@@ -2,7 +2,7 @@
 using Chat.Core.Entities;
 using System.Linq.Expressions;
 
-namespace Chat.Application.IRepositories
+namespace Chat.Application.Interfaces.Repositories
 {
     public interface IGenericRepository<TEntity> where TEntity : EntityBase
     {
@@ -26,7 +26,7 @@ namespace Chat.Application.IRepositories
         Task<PagedList<TEntity>> GetPageAsync(PageParameters pageParameters,
                                               params Expression<Func<TEntity, object>>[] includeProperties);
 
-        Task<PagedList<TEntity>> GetPageAsync(PageParameters pageParameters, 
+        Task<PagedList<TEntity>> GetPageAsync(PageParameters pageParameters,
                                               Expression<Func<TEntity, bool>> predicate,
                                               params Expression<Func<TEntity, object>>[] includeProperties);
 

@@ -1,10 +1,10 @@
-﻿using Chat.Application.IRepositories;
+﻿using Chat.Application.Interfaces.Repositories;
 using Chat.Application.Paging;
 using Chat.Core.Entities;
 using Chat.Infrastructure.EF;
 using Microsoft.EntityFrameworkCore;
 
-namespace Chat.Infrastructure.Repository
+namespace Chat.Infrastructure.Repositories
 {
     public class MessagesRepository : IMessagesRepository
     {

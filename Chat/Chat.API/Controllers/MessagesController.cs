@@ -1,5 +1,5 @@
 ﻿using Chat.API.SignalR;
-using Chat.Application.IRepositories;
+using Chat.Application.Interfaces.Repositories;
 using Chat.Application.Mapping;
 using Chat.Application.Models.Dtos;
 using Chat.Application.Paging;

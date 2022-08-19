@@ -2,7 +2,7 @@
 using Chat.Application.Models.Dtos;
 using Chat.Core.Entities.Identity;
 
-namespace Chat.Application.Interfaces
+namespace Chat.Application.Interfaces.Services.Identity
 {
     public interface IUsersService
     {

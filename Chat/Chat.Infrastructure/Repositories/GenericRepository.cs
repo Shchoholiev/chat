@@ -1,11 +1,11 @@
-﻿using Chat.Application.IRepositories;
+﻿using Chat.Application.Interfaces.Repositories;
 using Chat.Application.Paging;
 using Chat.Core.Entities;
 using Chat.Infrastructure.EF;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace Chat.Infrastructure.Repository
+namespace Chat.Infrastructure.Repositories
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : EntityBase
     {

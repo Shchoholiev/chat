@@ -1,4 +1,4 @@
-﻿using Chat.Application.Interfaces;
+﻿using Chat.Application.Interfaces.Services.Identity;
 using Chat.Application.Models.Dtos;
 using Chat.Application.Models.Identity;
 using Chat.Core.Entities.Identity;

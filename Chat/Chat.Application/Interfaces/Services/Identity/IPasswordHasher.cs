@@ -1,4 +1,4 @@
-﻿namespace Chat.Application.Interfaces
+﻿namespace Chat.Application.Interfaces.Services.Identity
 {
     public interface IPasswordHasher
     {

@@ -2,6 +2,7 @@
 using Chat.Core.Entities.Identity;
 using Chat.Infrastructure.EF;
 using Chat.Infrastructure.Services;
+using Chat.Infrastructure.Services.Identity;
 using Microsoft.Extensions.Configuration;
 
 namespace Chat.Infrastructure.DataInitializer

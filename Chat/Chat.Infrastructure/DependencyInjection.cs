@@ -1,8 +1,8 @@
-﻿using Chat.Application.Interfaces;
-using Chat.Application.IRepositories;
+﻿using Chat.Application.Interfaces.Repositories;
+using Chat.Application.Interfaces.Services.Identity;
 using Chat.Infrastructure.EF;
-using Chat.Infrastructure.Repository;
-using Chat.Infrastructure.Services;
+using Chat.Infrastructure.Repositories;
+using Chat.Infrastructure.Services.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 

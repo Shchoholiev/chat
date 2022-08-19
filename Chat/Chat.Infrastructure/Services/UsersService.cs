@@ -1,7 +1,7 @@
 ﻿using Chat.Application.Descriptions;
-using Chat.Application.DTO;
 using Chat.Application.Interfaces;
 using Chat.Application.IRepositories;
+using Chat.Application.Models.Dtos;
 using Chat.Core.Entities.Identity;
 
 namespace Chat.Infrastructure.Services
@@ -18,7 +18,7 @@ namespace Chat.Infrastructure.Services
             this._passwordHasher = passwordHasher;
         }
 
-        public async Task<OperationDetails> RegisterAsync(UserDTO userDTO)
+        public async Task<OperationDetails> RegisterAsync(UserDto userDTO)
         {
             var operationDetails = new OperationDetails();
             if (await this._usersRepository.GetOneAsync(u => u.Email == userDTO.Email) != null)
@@ -47,7 +47,7 @@ namespace Chat.Infrastructure.Services
             return operationDetails;
         }
 
-        public async Task<OperationDetails> LoginAsync(UserDTO userDTO)
+        public async Task<OperationDetails> LoginAsync(UserDto userDTO)
         {
             var user = await this._usersRepository.GetOneAsync(u => u.Email == userDTO.Email);
 

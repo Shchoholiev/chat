@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Chat.API.SignalR;
-using Chat.Application.DTO;
+using Chat.Application.Models.Dtos;
 using Chat.Core.Entities;
 using Chat.Core.Entities.Identity;
 
@@ -10,22 +10,22 @@ namespace Chat.API.Mapping
     {
         private readonly IMapper _mapper = new MapperConfiguration(cfg =>
         {
-            cfg.CreateMap<UserDTO, User>();
+            cfg.CreateMap<UserDto, User>();
 
-            cfg.CreateMap<User, UserDTO>();
+            cfg.CreateMap<User, UserDto>();
 
-            cfg.CreateMap<RoomDTO, Room>();
+            cfg.CreateMap<RoomDto, Room>();
 
             cfg.CreateMap<Message, SignalRMessage>();
 
         }).CreateMapper();
 
-        public User Map(User user, UserDTO userDTO)
+        public User Map(User user, UserDto userDTO)
         {
             return this._mapper.Map(userDTO, user);
         }
 
-        public Room Map(RoomDTO roomDTO)
+        public Room Map(RoomDto roomDTO)
         {
             return this._mapper.Map<Room>(roomDTO);
         }

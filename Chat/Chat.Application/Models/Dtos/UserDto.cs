@@ -1,6 +1,6 @@
-﻿namespace Chat.Application.DTO
+﻿namespace Chat.Application.Models.Dtos
 {
-    public class UserDTO
+    public class UserDto
     {
         public string Id { get; set; }
 

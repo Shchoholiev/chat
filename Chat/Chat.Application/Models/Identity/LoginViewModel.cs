@@ -1,4 +1,4 @@
-﻿namespace Chat.API.Models
+﻿namespace Chat.Application.Models.Identity
 {
     public class LoginViewModel
     {
@@ -7,7 +7,5 @@
         public string Password { get; set; }
 
         public string? RefreshToken { get; set; }
-
-        public DateTime RefreshTokenExpiryTime { get; set; }
     }
 }

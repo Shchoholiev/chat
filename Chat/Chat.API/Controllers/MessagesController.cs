@@ -1,7 +1,7 @@
 ﻿using Chat.API.Mapping;
 using Chat.API.SignalR;
-using Chat.Application.DTO;
 using Chat.Application.IRepositories;
+using Chat.Application.Models.Dtos;
 using Chat.Application.Paging;
 using Chat.Core.Entities;
 using Chat.Core.Entities.Identity;
@@ -57,7 +57,7 @@ namespace Chat.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Send([FromBody] MessageDTO messageDTO)
+        public async Task<IActionResult> Send([FromBody] MessageDto messageDTO)
         {
             var email = this.User?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             var user = await this._usersRepository.GetOneAsync(u => u.Email == email);
@@ -89,7 +89,7 @@ namespace Chat.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Edit(int id, [FromBody] MessageDTO messageDTO)
+        public async Task<IActionResult> Edit(int id, [FromBody] MessageDto messageDTO)
         {
             var message = await this._messagesReposiory.GetMessageAsync(id);
             if (message == null)
@@ -140,7 +140,7 @@ namespace Chat.API.Controllers
         }
 
         [HttpPost("replyInPerson/{email}")]
-        public async Task<IActionResult> ReplyInPerson(string email, [FromBody] MessageDTO messageDTO)
+        public async Task<IActionResult> ReplyInPerson(string email, [FromBody] MessageDto messageDTO)
         {
             var currentEmail = this.User?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             var room = await this._roomsRepository.GetOneAsync(r => r.DisplayName == null 

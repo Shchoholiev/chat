@@ -1,14 +1,14 @@
 ﻿using Chat.Application.Descriptions;
-using Chat.Application.DTO;
+using Chat.Application.Models.Dtos;
 using Chat.Core.Entities.Identity;
 
 namespace Chat.Application.Interfaces
 {
     public interface IUsersService
     {
-        Task<OperationDetails> RegisterAsync(UserDTO userDTO);
+        Task<OperationDetails> RegisterAsync(UserDto userDTO);
 
-        Task<OperationDetails> LoginAsync(UserDTO userDTO);
+        Task<OperationDetails> LoginAsync(UserDto userDTO);
 
         Task<OperationDetails> UpdateUserAsync(User user);
 

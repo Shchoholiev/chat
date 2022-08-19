@@ -1,4 +1,4 @@
-﻿using Chat.Application.DTO;
+﻿using Chat.Application.Models.Dtos;
 
 namespace Chat.API.SignalR
 {
@@ -10,7 +10,7 @@ namespace Chat.API.SignalR
 
         public DateTime SendDate { get; set; }
 
-        public UserDTO Sender { get; set; }
+        public UserDto Sender { get; set; }
 
         public bool HideForSender { get; set; }
 

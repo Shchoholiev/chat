@@ -1,6 +1,6 @@
-﻿namespace Chat.Application.DTO
+﻿namespace Chat.Application.Models.Dtos
 {
-    public class MessageDTO
+    public class MessageDto
     {
         public string Text { get; set; }
 

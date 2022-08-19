@@ -1,4 +1,4 @@
-﻿namespace Chat.API.Models
+﻿namespace Chat.Application.Models.Identity
 {
     public class RegisterViewModel
     {

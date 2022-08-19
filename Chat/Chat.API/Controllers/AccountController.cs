@@ -1,7 +1,6 @@
-﻿using Chat.API.Mapping;
-using Chat.API.Models;
-using Chat.Application.DTO;
-using Chat.Application.Interfaces;
+﻿using Chat.Application.Interfaces;
+using Chat.Application.Models.Dtos;
+using Chat.Application.Models.Identity;
 using Chat.Core.Entities.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +35,7 @@ namespace Chat.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userDTO = new UserDTO { Name = model.Name, Email = model.Email, Password = model.Password };
+                var userDTO = new UserDto { Name = model.Name, Email = model.Email, Password = model.Password };
                 var result = await this._usersService.RegisterAsync(userDTO);
 
                 if (result.Succeeded)
@@ -60,7 +59,7 @@ namespace Chat.API.Controllers
         {
             if (ModelState.IsValid)
             {
-                var userDTO = new UserDTO { Email = model.Email, Password = model.Password };
+                var userDTO = new UserDto { Email = model.Email, Password = model.Password };
                 var result = await this._usersService.LoginAsync(userDTO);
 
                 if (result.Succeeded)

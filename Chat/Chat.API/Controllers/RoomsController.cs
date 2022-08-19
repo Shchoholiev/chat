@@ -1,8 +1,8 @@
 ﻿using Chat.API.Mapping;
-using Chat.API.Models;
 using Chat.API.SignalR;
-using Chat.Application.DTO;
 using Chat.Application.IRepositories;
+using Chat.Application.Models.Chat;
+using Chat.Application.Models.Dtos;
 using Chat.Application.Paging;
 using Chat.Core.Entities;
 using Chat.Core.Entities.Identity;
@@ -69,7 +69,7 @@ namespace Chat.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] RoomDTO roomDTO)
+        public async Task<IActionResult> Create([FromBody] RoomDto roomDTO)
         {
             if (ModelState.IsValid)
             {

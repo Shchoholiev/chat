@@ -1,6 +1,6 @@
-﻿using Chat.API.Models;
-using Chat.Application.Interfaces;
+﻿using Chat.Application.Interfaces;
 using Chat.Application.IRepositories;
+using Chat.Application.Models.Identity;
 using Chat.Core.Entities.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

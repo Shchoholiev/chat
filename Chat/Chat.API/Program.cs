@@ -9,8 +9,8 @@ using Newtonsoft.Json;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var context = new ApplicationContext();
-await DbInitializer.Initialize(context, builder.Configuration);
+//var context = new ApplicationContext();
+//await DbInitializer.Initialize(context, builder.Configuration);
 
 builder.Services.AddJWTTokenServices(builder.Configuration);
 

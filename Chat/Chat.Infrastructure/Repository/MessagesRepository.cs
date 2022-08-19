@@ -12,9 +12,9 @@ namespace Chat.Infrastructure.Repository
 
         private readonly DbSet<Message> _table;
 
-        public MessagesRepository()
+        public MessagesRepository(ApplicationContext context)
         {
-            this._db = new ApplicationContext();
+            this._db = context;
             this._table = _db.Set<Message>();
         }
 

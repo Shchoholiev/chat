@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
-using Chat.API.SignalR;
 using Chat.Application.Models.Dtos;
+using Chat.Application.Models.SignalR;
 using Chat.Core.Entities;
 using Chat.Core.Entities.Identity;
 
-namespace Chat.API.Mapping
+namespace Chat.Application.Mapping
 {
     public class Mapper
     {
@@ -22,17 +22,17 @@ namespace Chat.API.Mapping
 
         public User Map(User user, UserDto userDTO)
         {
-            return this._mapper.Map(userDTO, user);
+            return _mapper.Map(userDTO, user);
         }
 
         public Room Map(RoomDto roomDTO)
         {
-            return this._mapper.Map<Room>(roomDTO);
+            return _mapper.Map<Room>(roomDTO);
         }
 
         public SignalRMessage Map(Message message)
         {
-            return this._mapper.Map<SignalRMessage>(message);
+            return _mapper.Map<SignalRMessage>(message);
         }
     }
 }

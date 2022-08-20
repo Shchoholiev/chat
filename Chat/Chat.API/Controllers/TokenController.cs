@@ -12,11 +12,11 @@ namespace Chat.API.Controllers
     [Route("api/token")]
     public class TokenController : Controller
     {
-        private readonly ITokenService _tokenService;
+        private readonly ITokensService _tokenService;
 
         private readonly IGenericRepository<User> _usersRepository;
 
-        public TokenController(ITokenService tokenService, IGenericRepository<User> usersRepository)
+        public TokenController(ITokensService tokenService, IGenericRepository<User> usersRepository)
         {
             this._tokenService = tokenService;
             this._usersRepository = usersRepository;

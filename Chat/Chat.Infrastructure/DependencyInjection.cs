@@ -27,9 +27,9 @@ namespace Chat.Infrastructure
 
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddScoped<IUsersService, UsersService>();
+            services.AddScoped<IUserManager, UsersService>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
-            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ITokensService, TokenService>();
 
             return services;
         }

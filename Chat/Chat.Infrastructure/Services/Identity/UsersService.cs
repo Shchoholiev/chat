@@ -6,7 +6,7 @@ using Chat.Core.Entities.Identity;
 
 namespace Chat.Infrastructure.Services.Identity
 {
-    public class UsersService : IUsersService
+    public class UsersService : IUserManager
     {
         private readonly IGenericRepository<User> _usersRepository;
 

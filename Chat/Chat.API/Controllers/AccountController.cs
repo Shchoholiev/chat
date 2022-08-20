@@ -13,11 +13,11 @@ namespace Chat.API.Controllers
     [Route("api/account")]
     public class AccountController : Controller
     {
-        private readonly IUsersService _usersService;
+        private readonly IUserManager _usersService;
 
-        private readonly ITokenService _tokenService;
+        private readonly ITokensService _tokenService;
 
-        public AccountController(IUsersService usersService, ITokenService tokenService)
+        public AccountController(IUserManager usersService, ITokensService tokenService)
         {
             this._usersService = usersService;
             this._tokenService = tokenService;
@@ -31,7 +31,7 @@ namespace Chat.API.Controllers
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] RegisterViewModel model)
+        public async Task<IActionResult> Register([FromBody] RegisterModel model)
         {
             if (ModelState.IsValid)
             {
@@ -55,7 +55,7 @@ namespace Chat.API.Controllers
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginViewModel model)
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             if (ModelState.IsValid)
             {

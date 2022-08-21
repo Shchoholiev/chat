@@ -2,15 +2,23 @@
 using Chat.Core.Entities.Identity;
 using Chat.Infrastructure.EF;
 using Chat.Infrastructure.Services.Identity;
-using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Chat.Infrastructure.DataInitializer
 {
     public static class DbInitializer
     {
-        public static async Task Initialize(ApplicationContext context, IConfiguration configuration)
+        public static async Task InitializeDbAsync(IApplicationBuilder app)
         {
-            await context.Database.EnsureDeletedAsync();
+            var scope = app.ApplicationServices.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+            await InitializeAsync(context);
+        }
+
+        private static async Task InitializeAsync(ApplicationContext context)
+        {
+            //await context.Database.EnsureDeletedAsync();
             await context.Database.EnsureCreatedAsync();
             var passwordHasher = new PasswordHasher();
 

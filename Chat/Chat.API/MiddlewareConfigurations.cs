@@ -1,4 +1,5 @@
 ﻿using Chat.API.Config;
+using Chat.Infrastructure.ExceptionHandling;
 using Chat.Infrastructure.Services.SignalR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
@@ -68,9 +69,10 @@ namespace Chat.API
                 options.AddPolicy("allowMyOrigin",
                 builder =>
                 {
-                    builder.AllowAnyOrigin()
+                    builder.WithOrigins("http://localhost:4200")
                            .AllowAnyMethod()
                            .AllowAnyHeader()
+                           .AllowCredentials()
                            .WithExposedHeaders("X-Pagination");
                 });
             });
@@ -84,6 +86,11 @@ namespace Chat.API
             services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
 
             return services;
+        }
+
+        public static void ConfigureCustomExceptionMiddleware(this IApplicationBuilder app)
+        {
+            app.UseMiddleware<ExceptionMiddleware>();
         }
     }
 }

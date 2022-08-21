@@ -1,166 +1,66 @@
-﻿using Chat.API.Mapping;
-using Chat.API.SignalR;
-using Chat.Application.DTO;
-using Chat.Application.IRepositories;
+﻿using Chat.Application.Interfaces.Services;
+using Chat.Application.Models.Dtos;
 using Chat.Application.Paging;
-using Chat.Core.Entities;
-using Chat.Core.Entities.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
-using Newtonsoft.Json;
-using System.Security.Claims;
 
 namespace Chat.API.Controllers
 {
     [Authorize]
-    [ApiController]
-    [Route("api/messages")]
-    public class MessagesController : Controller
+    public class MessagesController : ApiControllerBase
     {
-        private readonly IHubContext<ChatHub> _hubContext;
+        private readonly IMessagesService _messagesService;
 
-        private readonly IGenericRepository<User> _usersRepository;
-
-        private readonly IGenericRepository<Room> _roomsRepository;
-
-        private readonly IMessagesRepository _messagesReposiory;
-
-        private readonly Mapper _mapper = new();
-
-        public MessagesController(IHubContext<ChatHub> hubContext, IGenericRepository<User> usersRepository,
-                                  IGenericRepository<Room> roomsRepository, IMessagesRepository messagesReposiory)
+        public MessagesController(IMessagesService messagesService)
         {
-            this._hubContext = hubContext;
-            this._usersRepository = usersRepository;
-            this._roomsRepository = roomsRepository;
-            this._messagesReposiory = messagesReposiory;
+            this._messagesService = messagesService;
         }
 
         [HttpGet("{roomId}")]
-        public async Task<ActionResult<IEnumerable<Message>>> GetPage([FromQuery] PageParameters pageParameters, int roomId)
+        public async Task<ActionResult<IEnumerable<MessageDto>>> GetPageAsync(
+            [FromQuery] PageParameters pageParameters, int roomId, CancellationToken cancellationToken)
         {
-            var email = this.User?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var messages = await this._messagesReposiory.GetPageAsync(pageParameters, roomId, email);
-            var metadata = new
-            {
-                messages.TotalItems,
-                messages.PageSize,
-                messages.PageNumber,
-                messages.TotalPages,
-                messages.HasNextPage,
-                messages.HasPreviousPage
-            };
-            Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(metadata));
-
+            var messages = await this._messagesService.GetPageAsync(pageParameters, roomId, Email, cancellationToken);
+            this.SetPagingMetadata(messages);
             return messages;
         }
 
         [HttpPost]
-        public async Task<IActionResult> Send([FromBody] MessageDTO messageDTO)
+        public async Task<IActionResult> SendAsync([FromBody] MessageCreateDto messageDTO, 
+            CancellationToken cancellationToken)
         {
-            var email = this.User?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var user = await this._usersRepository.GetOneAsync(u => u.Email == email);
-            var room = await this._roomsRepository.GetOneAsync(messageDTO.RoomId);
-            if (user == null || room == null)
-            {
-                return BadRequest();
-            }
-
-            var message = new Message
-            {
-                Text = messageDTO.Text,
-                SendDate = DateTime.Now,
-                Sender = user,
-                Room = room
-            };
-
-            if (messageDTO.RepliedTo > 0)
-            {
-                var repliedTo = await this._messagesReposiory.GetMessageAsync(messageDTO.RepliedTo);
-                message.RepliedTo = repliedTo;
-            }
-            await this._messagesReposiory.AddAsync(message);
-
-            var signalrMessage = this._mapper.Map(message);
-            await this._hubContext.Clients.Group(room.Id.ToString()).SendAsync("MessageSent", signalrMessage);
-
+            await this._messagesService.SendAsync(messageDTO, Email, cancellationToken);
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Edit(int id, [FromBody] MessageDTO messageDTO)
+        public async Task<IActionResult> EditAsync(int id, [FromBody] MessageCreateDto messageDTO, 
+            CancellationToken cancellationToken)
         {
-            var message = await this._messagesReposiory.GetMessageAsync(id);
-            if (message == null)
-            {
-                return NotFound();
-            }
-
-            message.Text = messageDTO.Text;
-            await this._messagesReposiory.UpdateAsync(message);
-            var signalrMessage = this._mapper.Map(message);
-            await this._hubContext.Clients.Group(messageDTO.RoomId.ToString())
-                                          .SendAsync("MessageEdited", signalrMessage);
-
+            await this._messagesService.EditAsync(id, messageDTO, cancellationToken);
             return NoContent();
         }
 
         [HttpPut("hide/{id}")]
-        public async Task<IActionResult> HideForSender(int id)
+        public async Task<IActionResult> HideForSenderAsync(int id, CancellationToken cancellationToken)
         {
-            var message = await this._messagesReposiory.GetFullMessageAsync(id);
-            if (message == null)
-            {
-                return NotFound();
-            }
-
-            message.HideForSender = true;
-            await this._messagesReposiory.UpdateAsync(message);
-            var signalrMessage = this._mapper.Map(message);
-            await this._hubContext.Clients.Group(message.Room.Id.ToString())
-                                          .SendAsync("MessageHiddenForUser", signalrMessage);
-
-            return NoContent();
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
-        {
-            var message = await this._messagesReposiory.GetFullMessageAsync(id);
-            if (message == null)
-            {
-                return NotFound();
-            }
-
-            await this._messagesReposiory.DeleteAsync(message);
-            await this._hubContext.Clients.Group(message.Room.Id.ToString()).SendAsync("MessageDeleted", id);
-
+            await this._messagesService.HideForSenderAsync(id, cancellationToken);
             return NoContent();
         }
 
         [HttpPost("replyInPerson/{email}")]
-        public async Task<IActionResult> ReplyInPerson(string email, [FromBody] MessageDTO messageDTO)
+        public async Task<IActionResult> ReplyInPersonAsync(string email, 
+            [FromBody] MessageCreateDto messageDTO, CancellationToken cancellationToken)
         {
-            var currentEmail = this.User?.Claims?.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            var room = await this._roomsRepository.GetOneAsync(r => r.DisplayName == null 
-                                                               && r.Users.Any(u => u.Email == email) 
-                                                               && r.Users.Any(u => u.Email == currentEmail));
-            if (room == null)
-            {
-                var currentUser = await _usersRepository.GetOneAsync(u => u.Email == currentEmail);
-                var recipient = await _usersRepository.GetOneAsync(u => u.Email == email);
-                room = new Room
-                {
-                    DisplayName = null,
-                    Users = new List<User> { currentUser, recipient }
-                };
-                this._roomsRepository.Attach(currentUser, recipient);
-                await this._roomsRepository.AddAsync(room);
-            }
+            await this._messagesService.ReplyInPersonAsync(email, Email, messageDTO, cancellationToken);
+            return Ok();
+        }
 
-            messageDTO.RoomId = room.Id;
-            return await this.Send(messageDTO);
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteAsync(int id, CancellationToken cancellationToken)
+        {
+            await this._messagesService.DeleteAsync(id, cancellationToken);
+            return NoContent();
         }
     }
 }

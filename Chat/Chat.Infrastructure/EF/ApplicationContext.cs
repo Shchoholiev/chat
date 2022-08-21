@@ -16,13 +16,6 @@ namespace Chat.Infrastructure.EF
         {
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            string connectionString = @"server=(LocalDb)\MSSQLLocalDB;database=Chat;integrated security=True;
-                    MultipleActiveResultSets=True;App=EntityFramework;";
-            optionsBuilder.UseSqlServer(connectionString);
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new UserEntityConfiguration());

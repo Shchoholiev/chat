@@ -1,19 +1,21 @@
-﻿using Chat.Application.Interfaces;
-using Chat.Application.IRepositories;
+﻿using Chat.Application.Interfaces.Repositories;
+using Chat.Application.Interfaces.Services;
+using Chat.Application.Interfaces.Services.Identity;
 using Chat.Infrastructure.EF;
-using Chat.Infrastructure.Repository;
+using Chat.Infrastructure.Repositories;
 using Chat.Infrastructure.Services;
+using Chat.Infrastructure.Services.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Chat.Infrastructure
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddInfrastructure(this IServiceCollection services)
+        public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
-            var connectionString = @"server=(LocalDb)\MSSQLLocalDB;database=Chat;integrated security=True;
-                    MultipleActiveResultSets=True;App=EntityFramework;";
+            var connectionString = configuration.GetConnectionString("SQLDatabase");
 
             services.AddDbContext<ApplicationContext>(options =>
                 options.UseSqlServer(connectionString)
@@ -27,9 +29,12 @@ namespace Chat.Infrastructure
 
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
-            services.AddScoped<IUsersService, UsersService>();
+            services.AddScoped<IUserManager, UserManager>();
             services.AddScoped<IPasswordHasher, PasswordHasher>();
-            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ITokensService, TokensService>();
+            services.AddScoped<IMessagesService, MessagesService>();
+            services.AddScoped<IRoomsService, RoomsService>();
+            services.AddScoped<IAccountService, AccountService>();
 
             return services;
         }

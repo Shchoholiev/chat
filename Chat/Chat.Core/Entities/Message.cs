@@ -6,7 +6,7 @@ namespace Chat.Core.Entities
     {
         public string Text { get; set; }
 
-        public DateTime SendDate { get; set; }
+        public DateTime SendDateUTC { get; set; }
 
         public Room Room { get; set; }
 

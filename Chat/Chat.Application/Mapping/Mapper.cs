@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Chat.Application.Models.Dtos;
 using Chat.Application.Models.SignalR;
+using Chat.Application.Paging;
 using Chat.Core.Entities;
 using Chat.Core.Entities.Identity;
 
@@ -16,7 +17,11 @@ namespace Chat.Application.Mapping
 
             cfg.CreateMap<RoomDto, Room>();
 
+            cfg.CreateMap<Room, RoomDto>();
+
             cfg.CreateMap<Message, SignalRMessage>();
+
+            cfg.CreateMap<Message, MessageDto>();
 
         }).CreateMapper();
 
@@ -25,9 +30,29 @@ namespace Chat.Application.Mapping
             return _mapper.Map(userDTO, user);
         }
 
+        public UserDto Map(User user)
+        {
+            return _mapper.Map<UserDto>(user);
+        }
+
         public Room Map(RoomDto roomDTO)
         {
             return _mapper.Map<Room>(roomDTO);
+        }
+
+        public RoomDto Map(Room room)
+        {
+            return _mapper.Map<RoomDto>(room);
+        }
+
+        public PagedList<RoomDto> Map(PagedList<Room> rooms)
+        {
+            return _mapper.Map<PagedList<RoomDto>>(rooms);
+        }
+
+        public PagedList<MessageDto> Map(PagedList<Message> messages)
+        {
+            return _mapper.Map<PagedList<MessageDto>>(messages);
         }
 
         public SignalRMessage Map(Message message)

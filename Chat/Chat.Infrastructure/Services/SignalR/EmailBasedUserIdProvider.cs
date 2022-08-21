@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.SignalR;
 using System.Security.Claims;
 
-namespace Chat.API.SignalR
+namespace Chat.Infrastructure.Services.SignalR
 {
     public class EmailBasedUserIdProvider : IUserIdProvider
     {

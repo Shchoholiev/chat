@@ -59,7 +59,7 @@ namespace Chat.Infrastructure.Repositories
             var messages = await this._table
                                      .AsNoTracking()
                                      .Where(m => m.Room.Id == roomId && ((m.Sender.Email == email && m.HideForSender) ? false : true))
-                                     .OrderByDescending(m => m.SendDate)
+                                     .OrderByDescending(m => m.SendDateUTC)
                                      .Include(m => m.Sender)
                                      .Include(m => m.RepliedTo)
                                      .Skip((pageParameters.PageNumber - 1) * pageParameters.PageSize)

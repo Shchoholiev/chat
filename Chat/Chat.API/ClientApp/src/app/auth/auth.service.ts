@@ -3,7 +3,6 @@ import { Injectable } from '@angular/core';
 import { Router, RouterStateSnapshot } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { catchError, map, Observable, of } from 'rxjs';
-import { RoomsService } from '../rooms/rooms.service';
 import { Tokens } from './tokens.model';
 
 @Injectable({
@@ -61,7 +60,7 @@ export class AuthService {
     }
 
     var tokens = new Tokens(accessToken, refreshToken);
-    return this._http.post("https://localhost:7083/api/tokens/refresh", tokens, { observe: 'response' }).pipe(
+    return this._http.post("/api/tokens/refresh", tokens, { observe: 'response' }).pipe(
       map((response) => {
         this.login((<any>response).body);
         return true;

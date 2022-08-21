@@ -8,7 +8,7 @@ namespace Chat.Application.Models.SignalR
 
         public string Text { get; set; }
 
-        public DateTime SendDate { get; set; }
+        public DateTime SendDateUTC { get; set; }
 
         public UserDto Sender { get; set; }
 

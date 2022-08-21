@@ -35,6 +35,8 @@ namespace Chat.Infrastructure.Services.Identity
                 Id = DateTime.Now.Ticks.ToString(),
                 Name = register.Name,
                 Email = register.Email,
+                PasswordHash = this._passwordHasher.Hash(register.Password),
+                UserToken = this.GetRefreshToken(),
             };
 
             await this._usersRepository.AddAsync(user, cancellationToken);

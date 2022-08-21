@@ -10,7 +10,7 @@ import { Register } from './register/register.model';
 })
 export class AccountService {
 
-  private readonly baseURL = 'https://localhost:7083/api/account';
+  private readonly baseURL = '/api/account';
 
   constructor(private _http: HttpClient, private _authService: AuthService, private _router: Router) { }
 

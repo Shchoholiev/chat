@@ -12,7 +12,7 @@ import { CreateDialogueComponent } from './rooms/create-dialogue/create-dialogue
 })
 export class RoomsService {
 
-  private readonly _baseURL = 'https://localhost:7083/api/rooms';
+  private readonly _baseURL = '/api/rooms';
 
   public rooms: Room[] = [];
 
@@ -40,7 +40,6 @@ export class RoomsService {
       response => {
         this.rooms = this.rooms.concat(response.body as Room[]);
         var metadata = response.headers.get('x-pagination');
-        console.log(this.rooms);
         if (metadata) {
           var object = JSON.parse(metadata);
           this.pageNumber = Number(object.PageNumber);

@@ -47,17 +47,28 @@ namespace Chat.Application.Mapping
 
         public PagedList<RoomDto> Map(PagedList<Room> rooms)
         {
-            return _mapper.Map<PagedList<RoomDto>>(rooms);
+            var dto = _mapper.Map<PagedList<RoomDto>>(rooms);
+            this.MapPagedList(rooms, dto);
+            return dto;
         }
 
         public PagedList<MessageDto> Map(PagedList<Message> messages)
         {
-            return _mapper.Map<PagedList<MessageDto>>(messages);
+            var dto = _mapper.Map<PagedList<MessageDto>>(messages);
+            this.MapPagedList(messages, dto);
+            return dto;
         }
 
         public SignalRMessage Map(Message message)
         {
             return _mapper.Map<SignalRMessage>(message);
+        }
+
+        private void MapPagedList(IPagedList source, IPagedList destination)
+        {
+            destination.TotalPages = source.TotalPages;
+            destination.PageNumber = source.PageNumber;
+            destination.PageSize = source.PageSize;
         }
     }
 }

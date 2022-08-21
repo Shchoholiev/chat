@@ -40,6 +40,7 @@ export class RoomsService {
       response => {
         this.rooms = this.rooms.concat(response.body as Room[]);
         var metadata = response.headers.get('x-pagination');
+        console.log(this.rooms);
         if (metadata) {
           var object = JSON.parse(metadata);
           this.pageNumber = Number(object.PageNumber);

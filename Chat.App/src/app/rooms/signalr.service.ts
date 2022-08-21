@@ -17,7 +17,7 @@ export class SignalrService {
   constructor(private _authService: AuthService) { }
 
   public async chooseChat(newRoomId: string, oldRoomId: string){
-    await this._hubConnection.invoke("ChooseChat", newRoomId, oldRoomId);
+    await this._hubConnection.invoke("ChooseChatAsync", newRoomId, oldRoomId);
   }
   
   public async connect() {

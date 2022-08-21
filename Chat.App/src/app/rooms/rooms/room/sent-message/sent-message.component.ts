@@ -18,6 +18,6 @@ export class SentMessageComponent implements OnInit {
   }
 
   getTime(){
-    return (new Date(this.message.sendDate)).toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit'});
+    return (new Date(this.message.sendDateUTC)).toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit'});
   }
 }

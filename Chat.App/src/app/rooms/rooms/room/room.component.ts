@@ -7,6 +7,7 @@ import { SignalrService } from '../../signalr.service';
 import { MessagesService } from '../../messages.service';
 import { RoomsService } from '../../rooms.service';
 import { ManagingMessagesService } from './send-message/managing-messages.service';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-room',
@@ -27,7 +28,7 @@ export class RoomComponent implements OnInit, OnDestroy {
 
   async ngOnInit(): Promise<void> {
     await this.signalrService.connect();
-
+    
     this._route.params.subscribe(async params => {
       var oldRoomId = this.room?.id?.toString() || '0';
       var id = params['id'];
@@ -37,26 +38,66 @@ export class RoomComponent implements OnInit, OnDestroy {
         response => {
           this.room = response;
           this.signalrService.messages = [];
-          this.getMessages(1);
+          this.managingMessages.clearAll();
+          
+          this._messagesService.getPage(this.pageSize, 1, this.room.id).subscribe(
+            async response => {
+              var newMessages = response.body as Message[];
+              
+              if (newMessages.length) {
+                for (let i = newMessages.length - 1; i >= 0; i--) {
+                  if (!this.signalrService.messages.find(m => m.id == newMessages[i].id)) {
+                    this.signalrService.messages.unshift(newMessages[i]);
+                  }
+                }
+              }
+      
+              var metadata = response.headers.get('x-pagination');
+              if (metadata) {
+                var object = JSON.parse(metadata);
+                this.pageNumber = Number(object.PageNumber);
+              }
+              
+              await this.delay(50);
+              var element = document.getElementById('scroll');
+              if (element) {
+                element.scrollTop = element.scrollHeight;
+              }
+            }
+          )
         } 
       );
-      this.managingMessages.clearAll();
-
-      await this.delay(100);
-      var element = document.getElementById('scroll');
-      if (element) {
-        element.scrollTop = element.scrollHeight;
-      }
     });
+
   }
 
-  public loadNext(){
+  public async loadNext(){
     var messageToScroll = this.signalrService.messages[0];
-    this.getMessages(this.pageNumber + 1);
-    var element = document.getElementById(`message-${messageToScroll?.id}`);
-    if (element) {
-      element.scrollIntoView();          
-    }
+    this._messagesService.getPage(this.pageSize, this.pageNumber + 1, this.room.id).subscribe(
+      async response => {
+        var newMessages = response.body as Message[];
+        
+        if (newMessages.length) {
+          for (let i = newMessages.length - 1; i >= 0; i--) {
+            if (!this.signalrService.messages.find(m => m.id == newMessages[i].id)) {
+              this.signalrService.messages.unshift(newMessages[i]);
+            }
+          }
+        }
+
+        var metadata = response.headers.get('x-pagination');
+        if (metadata) {
+          var object = JSON.parse(metadata);
+          this.pageNumber = Number(object.PageNumber);
+        }
+
+        var element = document.getElementById(`message-${messageToScroll?.id}`);
+        if (element) {
+          await this.delay(10);
+          element.scrollIntoView();          
+        }
+      }
+    )
   }
 
   public getMessages(pageNumber: number){
@@ -77,6 +118,7 @@ export class RoomComponent implements OnInit, OnDestroy {
           var object = JSON.parse(metadata);
           this.pageNumber = Number(object.PageNumber);
         }
+        
       }
     )
   }

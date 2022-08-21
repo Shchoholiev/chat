@@ -8,11 +8,6 @@ using Chat.Core.Entities;
 using Chat.Core.Entities.Identity;
 using Chat.Infrastructure.Services.SignalR;
 using Microsoft.AspNetCore.SignalR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Chat.Infrastructure.Services
 {

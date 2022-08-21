@@ -1,6 +1,8 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterStateSnapshot } from '@angular/router';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { catchError, map, Observable, of } from 'rxjs';
 import { RoomsService } from '../rooms/rooms.service';
 import { Tokens } from './tokens.model';
 
@@ -9,8 +11,12 @@ import { Tokens } from './tokens.model';
 })
 export class AuthService {
 
-  constructor(private _jwtHelper: JwtHelperService, private _router: Router,
-              private _roomsService: RoomsService) { }
+  constructor(private _http: HttpClient, private _jwtHelper: JwtHelperService, private _router: Router) 
+  { 
+    if (localStorage.getItem("jwt")){
+      this.refreshTokens(null).subscribe();
+    }
+  }
 
   get name(){
     var token = localStorage.getItem("jwt");
@@ -36,12 +42,45 @@ export class AuthService {
   login(token: Tokens){
     localStorage.setItem('jwt', token.accessToken);
     localStorage.setItem('refreshToken', token.refreshToken);
-    this._roomsService.rooms = [];
+    this.startTokenTimer();
   }
 
   logout(){
     localStorage.removeItem('jwt');
     localStorage.removeItem('refreshToken');
     this._router.navigate(['account/login']);
+    clearTimeout(this.refreshTokensTimeout);
+  }
+
+  public refreshTokens(state: RouterStateSnapshot | null): Observable<boolean> {
+    var accessToken = localStorage.getItem("jwt");
+    var refreshToken = localStorage.getItem("refreshToken");
+    if (!accessToken || !refreshToken) { 
+      this._router.navigate(['/account/login'], { queryParams: { returnUrl: state?.url ?? "" }});
+      return of(false);
+    }
+
+    var tokens = new Tokens(accessToken, refreshToken);
+    return this._http.post("https://localhost:7083/api/tokens/refresh", tokens, { observe: 'response' }).pipe(
+      map((response) => {
+        this.login((<any>response).body);
+        return true;
+      }),
+      catchError(err => {
+        return this._router.navigate(['/account/login'], { queryParams: { returnUrl: state?.url ?? "" }});
+      })
+    );
+  }
+
+  private refreshTokensTimeout: any;
+
+  private startTokenTimer(){
+    var token = localStorage.getItem("jwt");
+    if (token) {
+      var decoded = this._jwtHelper.decodeToken(token);
+      var expires = new Date(decoded.exp * 1000);
+      var timeout = expires.getTime() - Date.now();
+      this.refreshTokensTimeout = setTimeout(() => this.refreshTokens(null).subscribe(), timeout);
+    }
   }
 }

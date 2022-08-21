@@ -12,8 +12,11 @@ import { Tokens } from './tokens.model';
 })
 export class AuthGuard implements CanActivate {
 
-  constructor(private _authService: AuthService, private _router: Router, 
+  constructor(private _authService: AuthService,  
               private _jwtHelper: JwtHelperService, private _http: HttpClient){}
+
+  ngOnInit(): void {
+  }
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
     var accessToken = localStorage.getItem("jwt");
@@ -21,25 +24,6 @@ export class AuthGuard implements CanActivate {
       return of(true);
     }
 
-    return this.refreshTokens(accessToken, state);
-  }
-
-  private refreshTokens(accessToken: string | null, state: RouterStateSnapshot): Observable<boolean> {
-    var refreshToken = localStorage.getItem("refreshToken");
-    if (!accessToken || !refreshToken) { 
-      this._router.navigate(['/account/login'], { queryParams: { returnUrl: state.url }});
-      return of(false);
-    }
-    
-    var tokens = new Tokens(accessToken, refreshToken);
-    return this._http.post("https://localhost:7083/api/token/refresh", tokens, { observe: 'response' }).pipe(
-      map((response) => {
-        this._authService.login((<any>response).body);
-        return true;
-      }),
-      catchError(err => {
-        return this._router.navigate(['/account/login'], { queryParams: { returnUrl: state.url }});
-      })
-    )
+    return this._authService.refreshTokens(state);
   }
 }

@@ -1,10 +1,15 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Chat.API.Config;
+using Chat.Infrastructure.Services.SignalR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System.Text;
 
 namespace Chat.API
 {
-    public static class DependencyInjection
+    public static class MiddlewareConfigurations
     {
         public static IServiceCollection AddJWTTokenServices(this IServiceCollection services,
                                                              IConfiguration configuration)
@@ -41,6 +46,42 @@ namespace Chat.API
                     }
                 };
             });
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureControllers(this IServiceCollection services)
+        {
+            services.AddControllers(options =>
+            {
+                options.Conventions.Add(new RouteTokenTransformerConvention(new ToKebabRouteTransformer()));
+            }).AddNewtonsoftJson(options =>
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureCORS(this IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("allowMyOrigin",
+                builder =>
+                {
+                    builder.AllowAnyOrigin()
+                           .AllowAnyMethod()
+                           .AllowAnyHeader()
+                           .WithExposedHeaders("X-Pagination");
+                });
+            });
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureSignalR(this IServiceCollection services)
+        {
+            services.AddSignalR();
+            services.AddSingleton<IUserIdProvider, EmailBasedUserIdProvider>();
 
             return services;
         }

@@ -54,7 +54,7 @@ namespace Chat.Infrastructure.Services
             await this._hubContext.Clients.Group(room.Id.ToString()).SendAsync("MessageSent", signalrMessage);
         }
 
-        public async Task CreateAsync(RoomDto roomDTO, string userName, CancellationToken cancellationToken)
+        public async Task<RoomDto> CreateAsync(RoomDto roomDTO, string userName, CancellationToken cancellationToken)
         {
             var room = this._mapper.Map(roomDTO);
             room.Messages.Add(new Message 
@@ -64,6 +64,9 @@ namespace Chat.Infrastructure.Services
             });
             this._roomsRepository.Attach(room);
             await this._roomsRepository.AddAsync(room, cancellationToken);
+
+            var dto = this._mapper.Map(room);
+            return dto;
         }
 
         public async Task<RoomDto> GetRoomAsync(int id, CancellationToken cancellationToken)

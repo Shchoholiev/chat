@@ -1,113 +1,41 @@
-﻿using Chat.Application.Interfaces.Services.Identity;
+﻿using Chat.Application.Interfaces.Services;
 using Chat.Application.Models.Dtos;
 using Chat.Application.Models.Identity;
-using Chat.Core.Entities.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace Chat.API.Controllers
 {
     [Authorize]
-    [ApiController]
-    [Route("api/account")]
-    public class AccountController : Controller
+    public class AccountController : ApiControllerBase
     {
-        private readonly IUserManager _usersService;
+        private readonly IAccountService _accountService;
 
-        private readonly ITokensService _tokenService;
-
-        public AccountController(IUserManager usersService, ITokensService tokenService)
+        public AccountController(IAccountService accountService)
         {
-            this._usersService = usersService;
-            this._tokenService = tokenService;
+            this._accountService = accountService;
         }
 
         [HttpGet("{email}")]
-        public async Task<ActionResult<User>> GetUser(string email)
+        public async Task<ActionResult<UserDto>> GetUserAsync(string email, CancellationToken cancellationToken)
         {
-            return await this._usersService.GetUserAsync(email);
+            return await this._accountService.GetUserAsync(email, cancellationToken);
         }
 
         [HttpPost("register")]
         [AllowAnonymous]
-        public async Task<IActionResult> Register([FromBody] RegisterModel model)
+        public async Task<ActionResult<TokensModel>> RegisterAsync([FromBody] RegisterModel model, 
+            CancellationToken cancellationToken)
         {
-            if (ModelState.IsValid)
-            {
-                var userDTO = new UserDto { Name = model.Name, Email = model.Email, Password = model.Password };
-                var result = await this._usersService.RegisterAsync(userDTO);
-
-                if (result.Succeeded)
-                {
-                    var user = await this._usersService.GetUserAsync(userDTO.Email);
-                    var tokens = await this.UpdateUserTokens(user);
-                    return Ok(tokens);
-                }
-                else
-                {
-                    return BadRequest(new { errors = result.Messages });
-                }
-            }
-
-            return BadRequest();
+            return await this._accountService.RegisterAsync(model, cancellationToken);
         }
 
         [HttpPost("login")]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        public async Task<ActionResult<TokensModel>> LoginAsync([FromBody] LoginModel model, 
+            CancellationToken cancellationToken)
         {
-            if (ModelState.IsValid)
-            {
-                var userDTO = new UserDto { Email = model.Email, Password = model.Password };
-                var result = await this._usersService.LoginAsync(userDTO);
-
-                if (result.Succeeded)
-                {
-                    var user = await this._usersService.GetUserAsync(userDTO.Email);
-                    var tokens = await this.UpdateUserTokens(user);
-                    return Ok(tokens);
-                }
-                else
-                {
-                    return BadRequest(new { errors = result.Messages });
-                }
-            }
-
-            return BadRequest();
-        }
-
-        private async Task<Object> UpdateUserTokens(User user)
-        {
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Email, user.Email),
-            };
-
-            var accessToken = this._tokenService.GenerateAccessToken(claims);
-            var refreshToken = this._tokenService.GenerateRefreshToken();
-
-            if (user?.UserToken == null)
-            {
-                user.UserToken = new UserToken
-                {
-                    RefreshToken = refreshToken,
-                    RefreshTokenExpiryTime = DateTime.Now.AddDays(7),
-                };
-            }
-            else
-            {
-                user.UserToken.RefreshToken = refreshToken;
-                user.UserToken.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
-            }
-            await this._usersService.SaveAsync();
-
-            return new TokensModel
-            {
-                AccessToken = accessToken,
-                RefreshToken = refreshToken
-            };
+            return await this._accountService.LoginAsync(model, cancellationToken);
         }
     }
 }

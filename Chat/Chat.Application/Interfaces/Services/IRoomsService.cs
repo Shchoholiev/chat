@@ -10,7 +10,7 @@ namespace Chat.Application.Interfaces.Services
 
         Task<PagedList<RoomDto>> GetRoomsAsync(PageParameters pageParameters, string userEmail, CancellationToken cancellationToken);
 
-        Task CreateAsync(RoomDto roomDTO, string userName, CancellationToken cancellationToken);
+        Task<RoomDto> CreateAsync(RoomDto roomDTO, string userName, CancellationToken cancellationToken);
 
         Task AddMemberAsync(AddToRoomModel model, CancellationToken cancellationToken);
     }

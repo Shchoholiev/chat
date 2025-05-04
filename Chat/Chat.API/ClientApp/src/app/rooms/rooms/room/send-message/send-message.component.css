@@ -1,0 +1,16 @@
+input:focus, input.form-control:focus {
+    outline:none !important;
+    outline-width: 0 !important;
+    box-shadow: none;
+    -moz-box-shadow: none;
+    -webkit-box-shadow: none;
+}
+
+.bg-secondary-message{
+    background-color: rgb(241, 250, 255);
+}
+
+.reply{
+    position: relative;
+    top: -55px;
+}

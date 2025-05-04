@@ -1,0 +1,16 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+
+.highlight{
+    background-color: #a6c9ff!important;
+}
+
+.transition{
+    transition: 0.5s;
+}
+
+.reply-length{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 75ch;
+}

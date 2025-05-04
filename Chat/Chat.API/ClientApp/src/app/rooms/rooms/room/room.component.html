@@ -1,0 +1,21 @@
+<section class="d-flex flex-column justify-content-between">
+  <div class="bg-white d-flex p-2 px-3 border-bottom justify-content-between">
+    <h5 class="text-primary m-1">{{room?.displayName ?? secondUser?.name}}</h5>
+    <div *ngIf="room?.displayName" class="text-small text-muted d-flex"  style="cursor: pointer;"
+        (click)="roomsService.openUsersInGroupDialog(room.users, room.id)">
+      <i class="fa-sm fa-solid fa-user-group m-auto"></i>
+      <p class="ms-2 m-auto">{{room.users.length}}</p>
+    </div>
+    <p *ngIf="!room?.displayName" class="text-muted my-auto">{{secondUser?.email}}</p>
+  </div>
+  <div class="px-4 pt-4 pb-2 chat-box bg-white d-flex flex-column" id="scroll" 
+      infinite-scroll [scrollWindow]="false" (scrolledUp)="loadNext()"
+      [ngClass]="{ 'chat-box-reply': managingMessages.replyMessage.id || managingMessages.inPersonMessage.id }">
+    <div *ngFor="let m of signalrService.messages" [ngSwitch]="m?.sender?.name">
+      <app-server-message *ngSwitchCase="null" [message]="m"></app-server-message>
+      <app-sent-message *ngSwitchCase="authService.name" [message]="m"></app-sent-message>
+      <app-received-message *ngSwitchDefault [message]="m"></app-received-message>
+    </div>
+  </div>
+  <app-send-message></app-send-message>
+</section>
